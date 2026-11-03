@@ -1,0 +1,21 @@
+# MARS (tải riêng, không commit)
+tools/
+*.jar
+
+# Kết quả test
+tests/*.diff
+
+# LaTeX build
+report/**/*.aux
+report/**/*.log
+report/**/*.out
+report/**/*.toc
+report/**/*.synctex.gz
+report/**/*.fdb_latexmk
+report/**/*.fls
+
+# Hệ điều hành / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

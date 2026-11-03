@@ -1,0 +1,26 @@
+name: MARS tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Tải MARS 4.5
+        run: |
+          mkdir -p tools
+          curl -sSL -o tools/Mars.jar \
+            https://github.com/dpetersanderson/MARS/releases/download/v.4.5.1/Mars4_5.jar
+
+      - name: Chạy test hồi quy
+        run: ./scripts/run_tests.sh
