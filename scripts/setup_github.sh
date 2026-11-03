@@ -33,8 +33,13 @@ milestone "M9 - Báo cáo & demo (v3.0)"           "Báo cáo LaTeX, slide, demo
 echo "✓ milestones"
 
 # ---------- Issues ----------
-issue() { # $1 milestone  $2 labels  $3 title  $4 body
-  gh issue create --repo "$REPO" --milestone "$1" --label "$2" --title "$3" --body "$4" >/dev/null
+# Dùng REST API (không cần GraphQL). Bỏ qua issue đã tồn tại cùng tiêu đề.
+EXISTING="$(gh api "repos/$REPO/issues?state=all&per_page=100" --paginate --jq '.[].title')"
+issue() { # $1 milestone  $2 label  $3 title  $4 body
+  if grep -Fxq -- "$3" <<<"$EXISTING"; then echo "  = $3 (đã có)"; return; fi
+  local ms
+  ms=$(gh api "repos/$REPO/milestones?state=all&per_page=100" --jq ".[] | select(.title==\"$1\") | .number")
+  gh api "repos/$REPO/issues" -f title="$3" -f body="$4" -F milestone="$ms" -f "labels[]=$2" >/dev/null
   echo "  + $3"
 }
 

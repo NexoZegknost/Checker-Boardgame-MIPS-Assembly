@@ -19,3 +19,4 @@ report/**/*.fls
 Thumbs.db
 .vscode/
 .idea/
+tests/*.err

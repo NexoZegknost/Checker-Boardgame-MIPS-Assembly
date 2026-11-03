@@ -12,14 +12,15 @@ MARS_JAR="${MARS_JAR:-$ROOT/tools/Mars.jar}"
 
 # nc = không in bản quyền, sm = bắt đầu tại nhãn global 'main',
 # p  = project mode: assemble mọi file .asm cùng thư mục với main.asm
-run_mars() { (cd "$ROOT/src" && java -jar "$MARS_JAR" nc sm p main.asm 2>&1) | grep -v '^Picked up JAVA_TOOL_OPTIONS' | tr -d '\r'; }
+# Chỉ so sánh stdout; stderr của Java (cảnh báo JVM) ghi vào tests/<tên>.err
+run_mars() { (cd "$ROOT/src" && java -jar "$MARS_JAR" nc sm p main.asm 2>"$ROOT/tests/$1.err") | tr -d '\r'; }
 
 cd "$ROOT/tests"
 if [[ $# -gt 0 ]]; then tests=("$@"); else tests=(); for f in *.in; do tests+=("${f%.in}"); done; fi
 
 pass=0; fail=0
 for t in "${tests[@]}"; do
-  actual="$(run_mars < "$t.in")"
+  actual="$(run_mars "$t" < "$t.in")"
   if diff -u <(printf '%s\n' "$(tr -d '\r' < "$t.out")") <(printf '%s\n' "$actual") > "$t.diff"; then
     echo "PASS  $t"; rm -f "$t.diff"; pass=$((pass+1))
   else
