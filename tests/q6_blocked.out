@@ -1,6 +1,7 @@
 === Checkers ===
 
  1) New game
+ 2) Settings
  0) Quit
 >   r   r   r   r
 r   r   r   r
@@ -203,5 +204,6 @@ Red has no legal moves.
 Black wins!
 
  1) New game
+ 2) Settings
  0) Quit
 > Goodbye!

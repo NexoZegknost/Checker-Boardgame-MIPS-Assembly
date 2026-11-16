@@ -1,14 +1,17 @@
 === Checkers ===
 
  1) New game
+ 2) Settings
  0) Quit
 > Please pick one of the numbers above.
 
  1) New game
+ 2) Settings
  0) Quit
 > Please pick one of the numbers above.
 
  1) New game
+ 2) Settings
  0) Quit
 >   r   r   r   r
 r   r   r   r
@@ -50,6 +53,7 @@ Red's turn.
 Enter starting square: Game stopped.
 
  1) New game
+ 2) Settings
  0) Quit
 >   r   r   r   r
 r   r   r   r
@@ -63,5 +67,6 @@ Black's turn.
 Enter starting square: Game stopped.
 
  1) New game
+ 2) Settings
  0) Quit
 > Goodbye!

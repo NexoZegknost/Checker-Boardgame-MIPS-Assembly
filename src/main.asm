@@ -7,7 +7,7 @@
 
 .data
 msg_title:      .asciiz "=== Checkers ===\n"
-msg_menu:       .asciiz "\n 1) New game\n 0) Quit\n"
+msg_menu:       .asciiz "\n 1) New game\n 2) Settings\n 0) Quit\n"
 msg_choice:     .asciiz "> "
 msg_bad_choice: .asciiz "Please pick one of the numbers above.\n"
 msg_goodbye:    .asciiz "Goodbye!\n"
@@ -20,12 +20,17 @@ menu:
         la      $a0, msg_choice
         jal     prompt_number
         beq     $v0, 1, menu_play
+        beq     $v0, 2, menu_settings
         beq     $v0, 0, menu_quit
         print_str(msg_bad_choice)
         j       menu
 
 menu_play:
         jal     game_run
+        j       menu
+
+menu_settings:
+        jal     settings_menu
         j       menu
 
 menu_quit:

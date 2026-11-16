@@ -8,8 +8,8 @@
 
 .globl board, turn, chain_piece, count_black, count_red
 .globl board_n, board_w, men_rows, num_squares, dirs
-.globl sq_to_idx, idx_to_sq
-.globl board_clear, board_reset, cell_of_sq, sq_of_cell
+.globl sq_to_idx, idx_to_sq, view_flip, num_flip
+.globl board_clear, board_reset, cell_of_sq, sq_of_cell, set_perspective
 
 .data
 board:          .space MAX_CELLS
@@ -29,6 +29,11 @@ dirs:           .word -11, -9, 9, 11
 # checkers notation <-> cell index, square numbers start at 1
 sq_to_idx:      .space 52
 idx_to_sq:      .space MAX_CELLS
+
+# set at the start of every turn from the point-of-view option
+                .align 2
+view_flip:      .word 0                 # draw the board with Red at the bottom
+num_flip:       .word 0                 # square numbers are counted from Red's side
 
 .text
 
@@ -141,15 +146,43 @@ cell_of_sq:
         blez    $a0, cs_done
         lw      $t0, num_squares
         bgt     $a0, $t0, cs_done
+        lw      $t1, num_flip
+        beqz    $t1, cs_lookup
+        sub     $a0, $t0, $a0           # turning the board maps k to total + 1 - k
+        addi    $a0, $a0, 1
+cs_lookup:
         la      $t0, sq_to_idx
         add     $t0, $t0, $a0
         lbu     $v0, 0($t0)
 cs_done:
         jr      $ra
 
-# a0 = cell index, v0 = its square number (0 for a light square)
+# a0 = cell index, v0 = its square number as the player sees it
+# (0 for a light square)
 sq_of_cell:
         la      $t0, idx_to_sq
         add     $t0, $t0, $a0
         lbu     $v0, 0($t0)
+        beqz    $v0, sc_done
+        lw      $t1, num_flip
+        beqz    $t1, sc_done
+        lw      $t0, num_squares
+        sub     $v0, $t0, $v0
+        addi    $v0, $v0, 1
+sc_done:
+        jr      $ra
+
+# Works out view_flip and num_flip for the side to move.
+set_perspective:
+        sw      $zero, view_flip
+        sw      $zero, num_flip
+        lw      $t0, turn
+        bne     $t0, RED, sp_done
+        lw      $t0, opt_persp
+        beqz    $t0, sp_done
+        li      $t1, 1
+        sw      $t1, view_flip
+        bne     $t0, 2, sp_done
+        sw      $t1, num_flip
+sp_done:
         jr      $ra

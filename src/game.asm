@@ -34,6 +34,7 @@ game_run:
 g_new:
         jal     board_reset
 g_turn:
+        jal     set_perspective
         jal     display_board
         jal     gen_legal
         bnez    $v0, g_announce

@@ -1,6 +1,7 @@
 === Checkers ===
 
  1) New game
+ 2) Settings
  0) Quit
 >   r   r   r   r
 r   r   r   r
@@ -417,5 +418,6 @@ Black has no pieces left.
 Red wins!
 
  1) New game
+ 2) Settings
  0) Quit
 > Goodbye!
