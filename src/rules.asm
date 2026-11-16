@@ -34,6 +34,17 @@ apply_step:
         lbu     $t4, 0($t3)             # the moving piece
         sb      $zero, 0($t3)
 
+        # the draw counter restarts on a capture or when a man moves
+        andi    $t5, $t4, KING
+        beqz    $t5, as_progress
+        bnez    $s1, as_progress
+        lw      $t5, quiet_plies
+        addi    $t5, $t5, 1
+        sw      $t5, quiet_plies
+        j       as_moved
+as_progress:
+        sw      $zero, quiet_plies
+as_moved:
         beqz    $s1, as_promote
         add     $t3, $t2, $s1
         sb      $zero, 0($t3)

@@ -7,16 +7,26 @@
 .include "include/constants.inc"
 
 .globl board, turn, chain_piece, count_black, count_red
+.globl quiet_plies, log_len, draw_offer
 .globl board_n, board_w, men_rows, num_squares, dirs
 .globl sq_to_idx, idx_to_sq, view_flip, num_flip
 .globl board_clear, board_reset, cell_of_sq, sq_of_cell, set_perspective
+.globl state_save, state_load
 
 .data
+# A position is everything from here to state_end. state_save and state_load
+# copy the block as a whole, so keep STATE_WORDS in step when adding to it.
+                .align 2
+state:
 board:          .space MAX_CELLS
 turn:           .word BLACK
 chain_piece:    .word 0                 # cell of the piece that must keep jumping, 0 = none
 count_black:    .word 0
 count_red:      .word 0
+quiet_plies:    .word 0                 # plies since the last capture or man move
+log_len:        .word 0                 # entries used in the move log
+draw_offer:     .word 0                 # colours with a draw offer on the table
+state_end:
 
 board_n:        .word 8
 board_w:        .word 10
@@ -101,6 +111,9 @@ bc_next:
         sw      $zero, chain_piece
         sw      $zero, count_black
         sw      $zero, count_red
+        sw      $zero, quiet_plies
+        sw      $zero, log_len
+        sw      $zero, draw_offer
         jr      $ra
 
 # Starting position: Red on the low squares, Black mirrored at the bottom.
@@ -185,4 +198,30 @@ set_perspective:
         bne     $t0, 2, sp_done
         sw      $t1, num_flip
 sp_done:
+        jr      $ra
+
+# Copies the current position to the STATE_BYTES at a0.
+state_save:
+        la      $t0, state
+        li      $t1, STATE_WORDS
+ss_loop:
+        lw      $t2, 0($t0)
+        sw      $t2, 0($a0)
+        addi    $t0, $t0, 4
+        addi    $a0, $a0, 4
+        addi    $t1, $t1, -1
+        bgtz    $t1, ss_loop
+        jr      $ra
+
+# Brings back a position saved by state_save.
+state_load:
+        la      $t0, state
+        li      $t1, STATE_WORDS
+sl_loop:
+        lw      $t2, 0($a0)
+        sw      $t2, 0($t0)
+        addi    $t0, $t0, 4
+        addi    $a0, $a0, 4
+        addi    $t1, $t1, -1
+        bgtz    $t1, sl_loop
         jr      $ra

@@ -202,6 +202,28 @@ b   b   b   b
 0   0   0   b
 Red has no legal moves.
 Black wins!
+Type l to see the moves of this game, or press Enter to continue: Moves so far:
+  1. Black 22-18
+  2. Red   11-16
+  3. Black 23-19
+  4. Red   10-15
+  5. Black 24-20
+  6. Red   7-11
+  7. Black 25-22
+  8. Red   6-10
+  9. Black 27-24
+ 10. Red   1-6
+ 11. Black 26-23
+ 12. Red   9-14
+ 13. Black 31-27
+ 14. Red   5-9
+ 15. Black 30-26
+ 16. Red   2-7
+ 17. Black 29-25
+ 18. Red   9-13
+ 19. Black 21-17
+ 20. Red   6-9
+ 21. Black 25-21
 
  1) New game
  2) Settings

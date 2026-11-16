@@ -26,6 +26,7 @@ menu:
         j       menu
 
 menu_play:
+        jal     board_reset
         jal     game_run
         j       menu
 

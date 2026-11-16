@@ -30,6 +30,13 @@
 .eqv MAX_CELLS   144
 .eqv MAX_SQUARES 50
 
+# size of one saved position: the board plus the 7 counters after it
+.eqv STATE_WORDS 43
+.eqv STATE_BYTES 172
+
+# a game is drawn after 40 moves each without a capture or a man moving
+.eqv DRAW_PLIES  80
+
 .macro print_str (%label)
         la      $a0, %label
         li      $v0, SYS_PRINT_STR
