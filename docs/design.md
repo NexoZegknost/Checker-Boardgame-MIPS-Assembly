@@ -1,111 +1,89 @@
-# Thiết kế kỹ thuật
+# Thiết kế
 
-Tài liệu này chốt các quyết định nền tảng trong M0. Thay đổi bất kỳ mục nào ở đây cần cả nhóm đồng ý qua PR.
+Tài liệu này mô tả cách chương trình được tổ chức, đủ để đọc mã nguồn mà không bị lạc.
 
-## 1. Biểu diễn bàn cờ: mailbox có viền
+## 1. Bàn cờ
 
-Bàn `N×N` (N = 8, hoặc 10 cho luật mở rộng) được lưu trong mảng byte `board` kích thước `W×W` với `W = N + 2`. Hàng/cột ngoài cùng là viền `WALL`.
+Bàn `n×n` (n = 8 hoặc 10) nằm trong một mảng byte `(n+2)×(n+2)`, vòng ngoài cùng là `WALL`:
 
 ```
-chỉ số ô:  idx = (r + 1) * W + (c + 1)      r, c tính từ 0, gốc ở góc TRÊN-TRÁI (phía Đỏ)
+chỉ số ô = (hàng + 1) * w + (cột + 1),  w = n + 2,  hàng 0 là hàng cuối của Đỏ
 ```
 
-Lý do chọn mailbox:
-- Đi ra ngoài bàn chỉ cần kiểm tra `board[idx] == WALL`, không phải so sánh hàng/cột.
-- Đổi sang 10×10 chỉ cần đổi `N`, `W` (biến lúc chạy, không phải hằng số) và bảng tra ký hiệu.
-- Bộ nhớ dành sẵn `MAX_CELLS = 144` byte cho trường hợp lớn nhất.
+Nhờ vòng `WALL`, bước ra ngoài bàn chỉ là đọc phải một ô khác 0, không cần so sánh hàng/cột. Bốn hướng chéo là bốn hằng số cộng vào chỉ số (`dirs`): `-(w+1)`, `-(w-1)`, `w-1`, `w+1`. Đen tiến lên bằng hai hướng đầu, Đỏ tiến xuống bằng hai hướng sau.
 
-### Mã ô (1 byte, bit flags — `src/include/constants.inc`)
+Mỗi ô là một byte ghép từ các bit:
 
-| Giá trị | Tên | In ra |
+| Bit | Tên | Ý nghĩa |
 |---|---|---|
-| `0x00` | `EMPTY` | `0` |
-| `0x01` | `B_PAWN` (BLACK) | `b` |
-| `0x02` | `R_PAWN` (RED) | `r` |
-| `0x05` | `B_KING` (BLACK\|KING) | `B` |
-| `0x06` | `R_KING` (RED\|KING) | `R` |
-| `0x08` | `WALL` | — |
+| 0x01 | `BLACK` | quân Đen |
+| 0x02 | `RED` | quân Đỏ |
+| 0x04 | `KING` | là vua |
+| 0x08 | `WALL` | viền |
+| 0x10 | `GHOST` | đã bị ăn trong lượt này nhưng chưa nhấc khỏi bàn |
 
-Kiểm tra nhanh bằng `andi`:
-- quân của phe `p`: `(cell & p) != 0`
-- quân đối phương: `(cell & (p ^ COLOR_MASK)) != 0`
-- là vua: `(cell & KING) != 0`
+"Có phải quân của phe p" là `ô & p`, "có phải quân đối phương" là `ô & (p ^ 3)`.
 
-## 2. Ký hiệu ô (notation)
+## 2. Số ô
 
-Ô tối là ô có `(r + c)` lẻ. Với `H = N / 2` ô tối mỗi hàng, ô số `s` (bắt đầu từ 1, phe Đen ở dưới, Hình 10 của đề):
+Ô tối là ô có `hàng + cột` lẻ, được đánh số từ 1 theo từng hàng, từ trên xuống. `board_clear` dựng hai bảng tra `sq_to_idx` và `idx_to_sq` theo `n`, nên cùng một đoạn mã dùng cho 32 ô lẫn 50 ô.
+
+Người chơi luôn gõ và nhìn thấy số ô qua hai hàm `cell_of_sq` / `sq_of_cell`. Khi bật tùy chọn xoay cả số ô và đang là lượt Đỏ, hai hàm này đổi `k` thành `tổng + 1 − k` (xoay bàn 180°). Biên bản ván đấu luôn ghi theo số ô chuẩn.
+
+## 3. Nước đi
+
+Một bước đi là một word:
 
 ```
-r = (s - 1) / H
-k = (s - 1) % H
-c = 2k + 1   nếu r chẵn
-c = 2k       nếu r lẻ
+bit 0..7    ô xuất phát
+bit 8..15   ô đáp
+bit 16..23  ô bị nhảy qua (0 nếu là nước đi thường)
 ```
 
-Kiểm tra với 8×8: ô 1 = (0,1), ô 4 = (0,7) góc trên phải, ô 29 = (7,0) góc dưới trái. ✔
+Một lượt ăn chuỗi gồm nhiều bước, mỗi bước một word.
 
-Hai bảng tra được sinh trong `board_init`:
-- `sq_to_idx[s]` — ký hiệu → chỉ số mailbox
-- `idx_to_sq[idx]` — chỉ số mailbox → ký hiệu (0 nếu không phải ô tối)
+- `gen_simple`, `gen_captures`: nước đi thường / nước ăn của **một** quân.
+- `gen_legal`: mọi bước hợp lệ của bên đang đi, ghi vào `legal_buf`. Nước ăn được sinh trước. Nếu đang ăn chuỗi (`chain_piece ≠ 0`) thì chỉ còn nước ăn của quân đó.
+- `filter_jumps`: bỏ những nước ăn mà bộ luật không cho (luật ăn nhiều nhất, luật chọn ô đáp của vua bay).
 
-**Phối cảnh phe Đỏ (Q3):** xoay 180° ⇒ `s_red = N*N/2 + 1 - s` (8×8: `33 - s`, nên ô 4 thành 29 ở góc dưới trái của Đỏ, khớp Hình 11).
+Mọi chỗ cần biết "nước này có hợp lệ không" đều tra trong `legal_buf`: kiểm tra nước người chơi gõ, liệt kê nước để chọn, phát hiện bị chặn hết nước, và cả máy.
 
-## 3. Hướng đi
+`apply_step` thực hiện một bước và trả về các bit `STEP_CAPTURE`, `STEP_PROMOTED`, `STEP_CHAIN`. Nếu quân vừa ăn còn ăn tiếp được thì lượt chưa đổi và `chain_piece` trỏ tới quân đó.
 
-| Hướng | Offset |
+## 4. Thế cờ và việc "thử rồi trả lại"
+
+Tất cả những gì thay đổi trong một ván nằm liền nhau từ nhãn `state` đến `state_end` (bàn cờ, lượt, quân đang ăn chuỗi, số quân, bộ đếm hòa, độ dài biên bản, lời cầu hòa): 172 byte. `state_save` / `state_load` chép nguyên khối này. Ba tính năng dùng chung cơ chế đó:
+
+- **Đi lại**: đầu mỗi lượt lưu một bản vào `undo_stack`; `u` nạp lại bản cũ.
+- **Chơi lại**: nạp bản lưu lúc ván bắt đầu.
+- **Thử nước đi**: `snap_push` → `apply_step` → xem kết quả → `snap_pop`. Luật ăn nhiều nhất (`chain_len`) và máy (`search`) đều làm vậy, nên chúng không cần hiểu riêng từng luật.
+
+## 5. Bộ luật
+
+`rule_flags` là một word, mỗi bit một luật (`RULE_MUST_CAPTURE`, `RULE_LONGEST`, `RULE_FLYING`, `RULE_JUMP_BACK`, `RULE_MOVE_BACK`, `RULE_CROWN_LATE`, `RULE_REMOVE_LATE`). Tất cả bằng 0 là luật của đề. Kích thước bàn và số hàng quân cũng lấy từ bộ luật.
+
+Một bộ luật có sẵn chỉ là một dòng trong bảng `presets` của `settings.asm`. Thêm biến thể mới nghĩa là thêm một dòng vào bảng và một tên vào menu.
+
+## 6. Máy
+
+Mức dễ chọn ngẫu nhiên một bước hợp lệ. Hai mức còn lại dùng negamax có cắt tỉa alpha-beta, sâu 2 hoặc 4 lượt. Hàm lượng giá đếm quân (quân thường 100, vua 180, vua bay 300) cộng một ít điểm cho quân thường đã tiến gần hàng phong vua. Một chuỗi ăn được tính là một lượt: khi cùng một bên còn đi tiếp, độ sâu giữ nguyên.
+
+## 7. Số lệnh thực thi
+
+Đo bằng tùy chọn `ic` của MARS khi chạy dòng lệnh:
+
+| Việc | Số lệnh (xấp xỉ) |
 |---|---|
-| Tây Bắc | `-W - 1` |
-| Đông Bắc | `-W + 1` |
-| Tây Nam | `+W - 1` |
-| Đông Nam | `+W + 1` |
+| Khởi động, in menu và bàn cờ đầu tiên | 9 000 |
+| Một lượt của người chơi (kiểm tra, đi, in lại bàn) | 6 000 |
+| Một nước của máy, mức trung bình | 96 000 |
+| Một nước của máy, mức khó | 950 000 |
+| Cả một ván 43 nước (test `m4_full_game`) | 256 000 |
 
-- Đen tiến = Bắc (offset âm), Đỏ tiến = Nam (offset dương).
-- Quân thường chỉ dùng 2 hướng tiến; vua dùng cả 4.
-- Hàng phong vua: Đen ở `r = 0`, Đỏ ở `r = N - 1`.
+## 8. Quy ước viết mã
 
-## 4. Biểu diễn nước đi
-
-Mỗi nước là 1 word:
-
-```
-bit 31..24  cờ (bit0 = là nước ăn)
-bit 23..16  idx bị ăn (0 nếu đi thường)
-bit 15..8   idx đích
-bit  7..0   idx xuất phát
-```
-
-`gen_moves(idx)` ghi danh sách nước vào `move_buf` và trả về số nước trong `$v0`. Hàm này dùng chung cho: kiểm tra hợp lệ (R10), ăn chuỗi (R4), liệt kê nước để chọn (Q4), phát hiện hết nước (Q6), bắt buộc ăn (A1), AI (A4).
-
-## 5. Trạng thái game (`.data` trong `board.asm` / `rules.asm`)
-
-| Biến | Kiểu | Ý nghĩa |
-|---|---|---|
-| `N`, `W` | word | kích thước bàn |
-| `board` | byte[144] | mailbox |
-| `turn` | word | `BLACK` hoặc `RED` |
-| `count_black`, `count_red` | word | số quân còn lại |
-| `chain_piece` | word | idx quân đang ăn chuỗi, `-1` nếu không |
-| `rules` | word | bit flags luật: bắt buộc ăn, vua bay, quân thường ăn lùi… |
-| `plies_no_progress` | word | đếm nước cho luật hòa (Q9) |
-
-## 6. Module
-
-| File | Trách nhiệm | Milestone |
-|---|---|---|
-| `main.asm` | điểm vào, menu, vòng lặp game | M0–M6 |
-| `display.asm` | in bàn cờ, thông báo, xoay bàn | M1, M5 |
-| `board.asm` | khởi tạo, bảng tra ký hiệu, đặt/xóa quân | M1 |
-| `input.asm` | đọc số, kiểm tra phạm vi, chế độ nhập | M2, M6 |
-| `movegen.asm` | `gen_moves`, `gen_captures`, `has_any_move` | M2, M3, M7 |
-| `rules.asm` | áp dụng nước, phong vua, thắng/thua/hòa | M3, M4, M6 |
-| `history.asm` | lịch sử nước đi, undo | M6 |
-| `ai.asm` | đối thủ máy | M7 |
-
-## 7. Quy ước viết mã
-
-- Mỗi file bắt đầu bằng `.include "include/constants.inc"`; hằng số dùng chung chỉ đặt ở đó.
-- Hàm dùng chéo module khai báo `.globl`; nhãn nội bộ đặt tiền tố tên hàm (`gen_moves_loop`).
-- Header mỗi hàm: mô tả, Input, Output, thanh ghi bị đổi (xem `display_banner`).
-- Quy ước gọi MIPS chuẩn: tham số `$a0–$a3`, trả về `$v0–$v1`; hàm nào gọi hàm khác hoặc dùng `$s*` phải lưu `$ra`/`$s*` lên stack và khôi phục trước `jr $ra`.
-- Không dùng số ma thuật: dùng `.eqv` hoặc biến.
-- Mỗi tính năng đi kèm ít nhất một test `tests/<milestone>_<tên>.in/.out`.
+- Mỗi file một việc; hàm dùng ngoài file khai báo `.globl` ở đầu file.
+- Hằng số và macro dùng chung chỉ nằm trong `src/include/constants.inc`.
+- Tham số trong `$a0–$a3`, kết quả trong `$v0–$v1`. Hàm nào gọi hàm khác thì lưu `$ra` và các `$s` nó dùng lên stack.
+- Nhãn nội bộ mang tiền tố viết tắt của hàm (`gl_` trong `gen_legal`, `as_` trong `apply_step`).
+- Vùng nhớ đọc/ghi theo word luôn có `.align 2` phía trước.

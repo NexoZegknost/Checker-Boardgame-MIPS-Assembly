@@ -38,7 +38,6 @@
 
 # the board array is sized for 10x10 plus a one-cell border
 .eqv MAX_CELLS   144
-.eqv MAX_SQUARES 50
 
 # size of one saved position: the board plus the 7 counters after it
 .eqv STATE_WORDS 43

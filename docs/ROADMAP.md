@@ -56,36 +56,15 @@ Mục tiêu: hoàn thành **toàn bộ yêu cầu bắt buộc** (tối đa 9/10
 
 ---
 
-## 2. Quyết định thiết kế nền tảng (làm ở M0, ảnh hưởng mọi milestone sau)
+## 2. Thiết kế
 
-1. **Biểu diễn bàn cờ có viền (mailbox)**: mảng byte `(N+2)×(N+2)` với viền `WALL`, giá trị ô: `EMPTY`, `B_PAWN`, `B_KING`, `R_PAWN`, `R_KING`, `WALL`. Kiểm tra biên chỉ còn 1 phép so sánh, và **cùng code chạy được cho 8×8 lẫn 10×10** (A2) bằng cách đọc `N` từ biến cấu hình.
-2. **Bảng tra ký hiệu ↔ chỉ số**: `sq_to_idx[]`, `idx_to_sq[]` sinh lúc khởi tạo theo `N` → dễ đổi phối cảnh (Q3) và kích thước bàn.
-3. **4 hướng chéo là hằng số offset** (`±(N+2) ± 1`); quân thường lọc theo hướng "tiến" của phe, vua dùng cả 4 → một hàm `gen_moves(piece_idx)` dùng chung cho kiểm tra hợp lệ, ăn chuỗi, liệt kê nước (Q4), phát hiện hết nước (Q6), bắt buộc ăn (A1) và AI.
-4. **Cấu trúc mã**: nhiều file `.asm` (MARS: *Settings → Assemble all files in directory*), mỗi module một nhiệm vụ, quy ước gọi hàm MIPS chuẩn (`$a0–$a3`, `$v0–$v1`, lưu `$s*`/`$ra` trên stack).
-5. **Kiểm thử tự động**: chạy MARS dòng lệnh `java -jar Mars.jar nc sm <files> < tests/xxx.in` rồi so với `tests/xxx.out`; chạy trong GitHub Actions.
-
-```
-checkers-mips/
-├─ src/
-│  ├─ main.asm        # vòng lặp game, menu
-│  ├─ config.asm      # hằng số, biến luật chơi (N, ruleset, cờ bắt buộc ăn…)
-│  ├─ board.asm       # khởi tạo, mailbox, bảng tra ký hiệu
-│  ├─ display.asm     # in bàn cờ, xoay bàn, thông báo
-│  ├─ input.asm       # đọc & kiểm tra số nhập
-│  ├─ movegen.asm     # sinh nước đi, nước ăn, ăn chuỗi
-│  ├─ rules.asm       # hợp lệ, phong vua, bắt buộc ăn, thắng/hòa
-│  ├─ history.asm     # lịch sử nước đi, undo
-│  └─ ai.asm          # (tùy chọn) đối thủ máy
-├─ tests/             # *.in / *.out cho từng tình huống
-├─ scripts/run_tests.sh
-├─ docs/              # design doc, sơ đồ luồng, ảnh chụp màn hình
-├─ report/            # báo cáo LaTeX
-└─ README.md
-```
+Xem [`design.md`](design.md).
 
 ---
 
 ## 3. Milestones
+
+Trạng thái: M0–M8 đã xong, mã nguồn và test nằm trên `main`.
 
 Mỗi milestone kết thúc bằng một **release tag**; mục *Done khi* là tiêu chí đóng milestone.
 
