@@ -5,6 +5,7 @@
 .globl apply_step
 
 .data
+                .align 2
 scratch_moves:  .space 64
 
 .text

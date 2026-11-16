@@ -14,7 +14,10 @@ msg_bye:        .asciiz "Game stopped.\n"
 msg_cap_black:  .asciiz "Captured Black's piece.\n"
 msg_cap_red:    .asciiz "Captured Red's piece.\n"
 msg_chain:      .asciiz "Chaining possible.\n"
+msg_black_out:  .asciiz "Black has no pieces left.\nRed wins!\n"
+msg_red_out:    .asciiz "Red has no pieces left.\nBlack wins!\n"
 
+                .align 2
 move_buf:       .space 64
 
 .text
@@ -30,6 +33,21 @@ game_run:
         jal     board_reset
 g_turn:
         jal     display_board
+
+        # the side to move loses if all of its pieces are gone
+        lw      $t0, turn
+        lw      $t1, count_black
+        la      $a0, msg_black_out
+        beq     $t0, BLACK, g_check_out
+        lw      $t1, count_red
+        la      $a0, msg_red_out
+g_check_out:
+        bnez    $t1, g_announce
+        li      $v0, SYS_PRINT_STR
+        syscall
+        j       g_leave
+
+g_announce:
         lw      $t0, turn
         la      $a0, msg_black_turn
         beq     $t0, BLACK, g_say_turn
@@ -122,7 +140,7 @@ g_command:
         j       g_chain_ask
 g_quit:
         print_str(msg_bye)
-
+g_leave:
         lw      $s3, 0($sp)
         lw      $s2, 4($sp)
         lw      $s1, 8($sp)
