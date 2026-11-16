@@ -2,6 +2,8 @@
 
  1) New game
  2) Settings
+ 3) Set up a position
+ 4) How to play
  0) Quit
 > 
 Settings (pick a line to change it)
@@ -18,6 +20,8 @@ Settings (pick a line to change it)
 > 
  1) New game
  2) Settings
+ 3) Set up a position
+ 4) How to play
  0) Quit
 >   +----+----+----+----+----+----+----+----+
   |    | 1 r|    | 2 r|    | 3 r|    | 4 r|
@@ -80,5 +84,7 @@ Enter starting square: Game stopped.
 
  1) New game
  2) Settings
+ 3) Set up a position
+ 4) How to play
  0) Quit
 > Goodbye!

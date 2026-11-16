@@ -1,0 +1,878 @@
+=== Checkers ===
+
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> 
+Position editor (standard square numbers, Black at the bottom)
+  b 14  black man      B 14  black king
+  r 9   red man        R 9   red king
+  x 14  empty a square c     clear the board
+  s     starting position
+  t     change the side to move
+  p     play from here q     back to the menu
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black to move.
+edit>   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black to move.
+edit>   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  B   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   R
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+40 moves each without a capture or a man moving: the game is a draw.
+Type l to see the moves of this game, or press Enter to continue: Moves so far:
+  1. Black 29-25
+  2. Red   4-8
+  3. Black 25-29
+  4. Red   8-4
+  5. Black 29-25
+  6. Red   4-8
+  7. Black 25-29
+  8. Red   8-4
+  9. Black 29-25
+ 10. Red   4-8
+ 11. Black 25-29
+ 12. Red   8-4
+ 13. Black 29-25
+ 14. Red   4-8
+ 15. Black 25-29
+ 16. Red   8-4
+ 17. Black 29-25
+ 18. Red   4-8
+ 19. Black 25-29
+ 20. Red   8-4
+ 21. Black 29-25
+ 22. Red   4-8
+ 23. Black 25-29
+ 24. Red   8-4
+ 25. Black 29-25
+ 26. Red   4-8
+ 27. Black 25-29
+ 28. Red   8-4
+ 29. Black 29-25
+ 30. Red   4-8
+ 31. Black 25-29
+ 32. Red   8-4
+ 33. Black 29-25
+ 34. Red   4-8
+ 35. Black 25-29
+ 36. Red   8-4
+ 37. Black 29-25
+ 38. Red   4-8
+ 39. Black 25-29
+ 40. Red   8-4
+ 41. Black 29-25
+ 42. Red   4-8
+ 43. Black 25-29
+ 44. Red   8-4
+ 45. Black 29-25
+ 46. Red   4-8
+ 47. Black 25-29
+ 48. Red   8-4
+ 49. Black 29-25
+ 50. Red   4-8
+ 51. Black 25-29
+ 52. Red   8-4
+ 53. Black 29-25
+ 54. Red   4-8
+ 55. Black 25-29
+ 56. Red   8-4
+ 57. Black 29-25
+ 58. Red   4-8
+ 59. Black 25-29
+ 60. Red   8-4
+ 61. Black 29-25
+ 62. Red   4-8
+ 63. Black 25-29
+ 64. Red   8-4
+ 65. Black 29-25
+ 66. Red   4-8
+ 67. Black 25-29
+ 68. Red   8-4
+ 69. Black 29-25
+ 70. Red   4-8
+ 71. Black 25-29
+ 72. Red   8-4
+ 73. Black 29-25
+ 74. Red   4-8
+ 75. Black 25-29
+ 76. Red   8-4
+ 77. Black 29-25
+ 78. Red   4-8
+ 79. Black 25-29
+ 80. Red   8-4
+
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> 
+How to play
+- Black moves first, then the players take turns.
+- A man moves one square diagonally forward onto an empty square.
+- A piece captures by jumping over an enemy piece next to it and landing
+  on the empty square right behind. If that piece can jump again from
+  where it landed, it has to.
+- A man that reaches the far row becomes a king (shown as B or R).
+  Kings move and capture forwards and backwards.
+- You win when your opponent has no pieces or no legal move left.
+- The dark squares are numbered row by row from the top left; the
+  framed board style in the settings shows the numbers.
+- During a game type h to see the extra commands.
+
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> Goodbye!

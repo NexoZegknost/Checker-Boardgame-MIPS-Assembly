@@ -2,6 +2,8 @@
 
  1) New game
  2) Settings
+ 3) Set up a position
+ 4) How to play
  0) Quit
 >   r   r   r   r
 r   r   r   r
@@ -12,6 +14,11 @@ b   b   b   b
   b   b   b   b
 b   b   b   b
 Black's turn.
-Enter starting square: Not a valid move! There is no square 0, squares go from 1 to 32. Try again.
-Enter starting square: 
-Program terminated when maximum step limit -1 reached.
+Enter starting square: Game stopped.
+
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> Goodbye!

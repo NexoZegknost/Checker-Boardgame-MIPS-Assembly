@@ -2,6 +2,8 @@
 
  1) New game
  2) Settings
+ 3) Set up a position
+ 4) How to play
  0) Quit
 >   r   r   r   r
 r   r   r   r
@@ -56,6 +58,8 @@ Enter starting square: Both players agreed to a draw.
 Type l to see the moves of this game, or press Enter to continue: 
  1) New game
  2) Settings
+ 3) Set up a position
+ 4) How to play
  0) Quit
 >   r   r   r   r
 r   r   r   r
@@ -91,5 +95,7 @@ Enter starting square: Both players agreed to a draw.
 Type l to see the moves of this game, or press Enter to continue: 
  1) New game
  2) Settings
+ 3) Set up a position
+ 4) How to play
  0) Quit
 > Goodbye!

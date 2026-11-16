@@ -1,0 +1,162 @@
+=== Checkers ===
+
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> 
+Position editor (standard square numbers, Black at the bottom)
+  b 14  black man      B 14  black king
+  r 9   red man        R 9   red king
+  x 14  empty a square c     clear the board
+  s     starting position
+  t     change the side to move
+  p     play from here q     back to the menu
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   r   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   r   0
+  0   0   b   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   r   0
+  0   0   b   0
+0   0   0   0
+  0   0   b   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   r   0
+  0   0   b   0
+0   0   0   0
+  0   b   b   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   r   0
+  b   0   b   0
+0   0   0   0
+  0   b   b   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+b   0   0   0
+  0   0   0   0
+0   0   r   0
+  b   0   b   0
+0   0   0   0
+  0   b   b   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+b   0   0   0
+  0   0   0   0
+0   0   r   0
+  b   0   b   0
+0   0   0   0
+  0   b   b   0
+0   0   0   0
+Red to move.
+edit>   0   0   0   0
+b   0   0   0
+  0   0   0   0
+0   0   r   0
+  b   0   b   0
+0   0   0   0
+  0   b   b   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square: Captured Black's piece.
+  0   0   0   0
+b   0   0   0
+  0   0   0   0
+0   0   0   0
+  b   0   0   0
+0   0   0   r
+  0   b   b   0
+0   0   0   0
+Chaining possible.
+Enter landing square: Captured Black's piece.
+  0   0   0   0
+b   0   0   0
+  0   0   0   0
+0   0   0   0
+  b   0   0   0
+0   0   0   0
+  0   b   0   0
+0   0   R   0
+Chaining possible.
+Enter landing square: Captured Black's piece.
+  0   0   0   0
+b   0   0   0
+  0   0   0   0
+0   0   0   0
+  b   0   0   0
+0   R   0   0
+  0   0   0   0
+0   0   0   0
+Chaining possible.
+Enter landing square: Captured Black's piece.
+  0   0   0   0
+b   0   0   0
+  0   0   0   0
+R   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square:   B   0   0   0
+0   0   0   0
+  0   0   0   0
+R   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   B   0   0   0
+0   0   0   0
+  R   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Game stopped.
+
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> Goodbye!
