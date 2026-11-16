@@ -181,10 +181,15 @@ piece_char:
         la      $t0, board
         add     $t0, $t0, $a0
         lbu     $t0, 0($t0)
+        andi    $t1, $t0, GHOST
+        bnez    $t1, pc_ghost
         andi    $t0, $t0, 7
         la      $t1, piece_chars
         add     $t1, $t1, $t0
         lbu     $v0, 0($t1)
+        jr      $ra
+pc_ghost:
+        li      $v0, 'x'                # jumped, taken off at the end of the turn
         jr      $ra
 
 # Prints "Black" or "Red" for the colour in a0.

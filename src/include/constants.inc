@@ -14,10 +14,17 @@
 .eqv RED         2
 .eqv KING        4
 .eqv WALL        8
+.eqv GHOST       16     # captured this turn but still standing (RULE_REMOVE_LATE)
 .eqv COLOR_MASK  3
 
 # bits of rule_flags, all off = the base game from the assignment
 .eqv RULE_MUST_CAPTURE  1
+.eqv RULE_LONGEST       2       # must play the capture that takes the most pieces
+.eqv RULE_FLYING        4       # kings move any distance along a diagonal
+.eqv RULE_JUMP_BACK     8       # men may capture backwards
+.eqv RULE_MOVE_BACK     16      # men may also step backwards
+.eqv RULE_CROWN_LATE    32      # a man is crowned only if its move ends on the last row
+.eqv RULE_REMOVE_LATE   64      # jumped pieces leave the board when the turn is over
 
 # result of parse_line
 .eqv P_BAD       0

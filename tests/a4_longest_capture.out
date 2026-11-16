@@ -1,0 +1,158 @@
+=== Checkers ===
+
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> 
+Settings (pick a line to change it)
+ 1) Board style  : plain, as in the assignment
+ 2) Point of view: Black always at the bottom
+ 3) Move entry   : type the starting and landing squares
+ 4) Rules        : assignment (capturing is optional)
+ 5) Custom rules...
+ 0) Back
+> 
+Settings (pick a line to change it)
+ 1) Board style  : plain, as in the assignment
+ 2) Point of view: Black always at the bottom
+ 3) Move entry   : type the starting and landing squares
+ 4) Rules        : English draughts (capturing is mandatory)
+ 5) Custom rules...
+ 0) Back
+> 
+Settings (pick a line to change it)
+ 1) Board style  : plain, as in the assignment
+ 2) Point of view: Black always at the bottom
+ 3) Move entry   : type the starting and landing squares
+ 4) Rules        : International draughts (10x10, flying kings, longest capture)
+ 5) Custom rules...
+ 0) Back
+> 
+Settings (pick a line to change it)
+ 1) Board style  : plain, as in the assignment
+ 2) Point of view: Black always at the bottom
+ 3) Move entry   : type the starting and landing squares
+ 4) Rules        : Brazilian draughts (International rules on 8x8)
+ 5) Custom rules...
+ 0) Back
+> 
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> 
+Position editor (standard square numbers, Black at the bottom)
+  b 14  black man      B 14  black king
+  r 9   red man        R 9   red king
+  x 14  empty a square c     clear the board
+  s     starting position
+  t     change the side to move
+  p     play from here q     back to the menu
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   r   0   0
+  0   0   0   0
+B   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   r   0   0
+0   0   0   0
+  0   0   0   0
+0   r   0   0
+  0   0   0   0
+B   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   r   0   0
+0   0   0   0
+  0   0   0   0
+0   r   0   0
+  0   0   0   0
+B   0   0   b
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   r   0   0
+0   0   0   0
+  0   0   0   0
+0   r   0   0
+  0   0   r   0
+B   0   0   b
+Black to move.
+edit>   R   0   0   0
+0   0   0   0
+  0   r   0   0
+0   0   0   0
+  0   0   0   0
+0   r   0   0
+  0   0   r   0
+B   0   0   b
+Black to move.
+edit>   R   0   0   0
+0   0   0   0
+  0   r   0   0
+0   0   0   0
+  0   0   0   0
+0   r   0   0
+  0   0   r   0
+B   0   0   b
+Black's turn.
+Enter starting square: Not a valid move! You have to play the capture that takes the most pieces. Try again.
+Enter starting square: Enter landing square: Not a valid move! You have to play the capture that takes the most pieces. Try again.
+Enter starting square: Enter landing square: Not a valid move! Square 22 is already occupied. Try again.
+Enter starting square: Enter landing square: Captured Red's piece.
+  R   0   0   0
+0   0   0   0
+  0   r   0   0
+0   0   B   0
+  0   0   0   0
+0   x   0   0
+  0   0   r   0
+0   0   0   b
+Chaining possible.
+Enter landing square: Not a valid move! Square 7 is not on a diagonal from square 15. Try again.
+Enter landing square: Captured Red's piece.
+  R   0   0   0
+0   B   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   r   0
+0   0   0   b
+Red's turn.
+Enter starting square: Enter landing square: Not a valid move! You have to capture when you can. Try again.
+Enter starting square: Game stopped.
+
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> Goodbye!

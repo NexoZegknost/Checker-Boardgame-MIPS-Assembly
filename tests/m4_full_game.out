@@ -295,6 +295,7 @@ r   0   b   b
 b   0   0   b
 Red's turn.
 Enter starting square: Enter landing square: Captured Black's piece.
+Red's man becomes a king.
   r   r   0   0
 0   r   r   r
   0   0   r   0
@@ -389,6 +390,7 @@ r   0   r   r
 b   R   0   0
 Chaining possible.
 Enter landing square: Captured Black's piece.
+Red's man becomes a king.
   0   r   0   0
 r   0   r   r
   0   0   0   0
@@ -408,6 +410,7 @@ r   0   r   r
 0   R   R   0
 Red's turn.
 Enter starting square: Enter landing square: Captured Black's piece.
+Red's man becomes a king.
   0   r   0   0
 r   0   r   r
   0   0   0   0

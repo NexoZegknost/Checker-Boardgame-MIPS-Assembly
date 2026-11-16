@@ -11,7 +11,7 @@
 .globl board_n, board_w, men_rows, num_squares, dirs
 .globl sq_to_idx, idx_to_sq, view_flip, num_flip
 .globl board_clear, board_reset, cell_of_sq, sq_of_cell, set_perspective
-.globl state_save, state_load
+.globl state_save, state_load, snap_push, snap_pop
 
 .data
 # A position is everything from here to state_end. state_save and state_load
@@ -39,6 +39,11 @@ dirs:           .word -11, -9, 9, 11
 # checkers notation <-> cell index, square numbers start at 1
 sq_to_idx:      .space 52
 idx_to_sq:      .space MAX_CELLS
+
+# positions parked while the move generator or the computer tries moves out
+                .align 2
+snap_top:       .word snap_stack
+snap_stack:     .space 16512            # 96 * STATE_BYTES
 
 # set at the start of every turn from the point-of-view option
                 .align 2
@@ -225,3 +230,17 @@ sl_loop:
         addi    $t1, $t1, -1
         bgtz    $t1, sl_loop
         jr      $ra
+
+# snap_push parks the current position on a stack, snap_pop takes the last
+# one back. Used to try a move and undo it again.
+snap_push:
+        lw      $a0, snap_top
+        addi    $t0, $a0, STATE_BYTES
+        sw      $t0, snap_top
+        j       state_save
+
+snap_pop:
+        lw      $a0, snap_top
+        addi    $a0, $a0, -STATE_BYTES
+        sw      $a0, snap_top
+        j       state_load

@@ -1,0 +1,323 @@
+=== Checkers ===
+
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> 
+Settings (pick a line to change it)
+ 1) Board style  : plain, as in the assignment
+ 2) Point of view: Black always at the bottom
+ 3) Move entry   : type the starting and landing squares
+ 4) Rules        : assignment (capturing is optional)
+ 5) Custom rules...
+ 0) Back
+> 
+Settings (pick a line to change it)
+ 1) Board style  : plain, as in the assignment
+ 2) Point of view: Black always at the bottom
+ 3) Move entry   : type the starting and landing squares
+ 4) Rules        : English draughts (capturing is mandatory)
+ 5) Custom rules...
+ 0) Back
+> 
+Settings (pick a line to change it)
+ 1) Board style  : plain, as in the assignment
+ 2) Point of view: Black always at the bottom
+ 3) Move entry   : type the starting and landing squares
+ 4) Rules        : International draughts (10x10, flying kings, longest capture)
+ 5) Custom rules...
+ 0) Back
+> 
+Settings (pick a line to change it)
+ 1) Board style  : plain, as in the assignment
+ 2) Point of view: Black always at the bottom
+ 3) Move entry   : type the starting and landing squares
+ 4) Rules        : Brazilian draughts (International rules on 8x8)
+ 5) Custom rules...
+ 0) Back
+> 
+Settings (pick a line to change it)
+ 1) Board style  : plain, as in the assignment
+ 2) Point of view: Black always at the bottom
+ 3) Move entry   : type the starting and landing squares
+ 4) Rules        : Russian draughts (8x8, flying kings)
+ 5) Custom rules...
+ 0) Back
+> 
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> 
+Position editor (standard square numbers, Black at the bottom)
+  b 14  black man      B 14  black king
+  r 9   red man        R 9   red king
+  x 14  empty a square c     clear the board
+  s     starting position
+  t     change the side to move
+  p     play from here q     back to the menu
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   b   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   b   0   0
+  0   r   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   b   0   0
+  0   r   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   b   0   0
+  0   r   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square: Captured Red's piece.
+  0   0   0   R
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   b   0
+  0   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Enter landing square:   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   R   0   0
+0   0   b   0
+  0   0   0   0
+0   0   0   0
+Black's turn.
+Enter starting square: Enter landing square: Captured Red's piece.
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   b   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Red has no pieces left.
+Black wins!
+Type l to see the moves of this game, or press Enter to continue: 
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> 
+Position editor (standard square numbers, Black at the bottom)
+  b 14  black man      B 14  black king
+  r 9   red man        R 9   red king
+  x 14  empty a square c     clear the board
+  s     starting position
+  t     change the side to move
+  p     play from here q     back to the menu
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+B   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   r   0   0
+  0   0   0   0
+B   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  0   r   0   0
+0   0   0   0
+  0   0   0   0
+0   r   0   0
+  0   0   0   0
+B   0   0   0
+Black to move.
+edit>   R   0   0   0
+0   0   0   0
+  0   r   0   0
+0   0   0   0
+  0   0   0   0
+0   r   0   0
+  0   0   0   0
+B   0   0   0
+Black to move.
+edit>   R   0   0   0
+0   0   0   0
+  0   r   0   0
+0   0   0   0
+  0   0   0   0
+0   r   0   0
+  0   0   0   0
+B   0   0   0
+Black's turn.
+Enter starting square: Enter landing square: Not a valid move! You have to land on a square from which the piece can keep capturing. Try again.
+Enter starting square: Enter landing square: Captured Red's piece.
+  R   0   0   0
+0   0   0   0
+  0   r   0   0
+0   0   B   0
+  0   0   0   0
+0   x   0   0
+  0   0   0   0
+0   0   0   0
+Chaining possible.
+Enter landing square: Captured Red's piece.
+  R   0   0   0
+0   B   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Red's turn.
+Enter starting square: Game stopped.
+
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> 
+Position editor (standard square numbers, Black at the bottom)
+  b 14  black man      B 14  black king
+  r 9   red man        R 9   red king
+  x 14  empty a square c     clear the board
+  s     starting position
+  t     change the side to move
+  p     play from here q     back to the menu
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   0   0   0
+  b   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   r   0   0
+  b   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   r   0   0
+  b   0   r   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+Black to move.
+edit>   0   0   0   0
+0   r   0   0
+  b   0   r   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   R
+Black to move.
+edit>   0   0   0   0
+0   r   0   0
+  b   0   r   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   R
+Black's turn.
+Enter starting square: Enter landing square: Captured Red's piece.
+Black's man becomes a king.
+  0   B   0   0
+0   x   0   0
+  0   0   r   0
+0   0   0   0
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   R
+Chaining possible.
+Enter landing square: Captured Red's piece.
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   B
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   0   R
+Red's turn.
+Enter starting square: Game stopped.
+
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+> Goodbye!

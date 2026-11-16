@@ -26,8 +26,16 @@ why_far:        .asciiz " is too far away."
 why_must_a:     .asciiz "You have to capture this turn and the piece on square "
 why_must_b:     .asciiz " cannot."
 why_must:       .asciiz "You have to capture when you can."
+why_ghost:      .asciiz "That piece has already been captured this turn."
+why_blocked:    .asciiz "Your own piece is in the way."
+why_two:        .asciiz "You cannot jump over more than one piece at a time."
+why_longest:    .asciiz "You have to play the capture that takes the most pieces."
+why_land:       .asciiz "You have to land on a square from which the piece can keep capturing."
 why_not_now:    .asciiz "That move is not allowed here."
 str_dot:        .asciiz "."
+
+                .align 2
+own_jumps:      .space 160
 
 .text
 
@@ -97,6 +105,21 @@ es_stuck:
         print_str(msg_not_valid)
         jal     capture_forced
         beqz    $v0, es_blocked
+        # it may well be able to jump, just not in a way the rules accept
+        move    $a0, $s1
+        la      $a1, own_jumps
+        jal     gen_captures
+        beqz    $v0, es_cannot
+        la      $a0, why_longest
+        lw      $t0, rule_flags
+        andi    $t0, $t0, RULE_LONGEST
+        bnez    $t0, es_other
+        la      $a0, why_land
+es_other:
+        li      $v0, SYS_PRINT_STR
+        syscall
+        j       es_fail
+es_cannot:
         print_str(why_must_a)
         print_num($s0)
         print_str(why_must_b)
@@ -158,13 +181,26 @@ explain_landing:
         la      $t0, board
         add     $t0, $t0, $s0
         lbu     $t6, 0($t0)             # the piece that should move
+        lw      $t7, rule_flags
         andi    $t0, $t6, KING
-        bnez    $t0, el_distance
+        beqz    $t0, el_man
+        andi    $t0, $t7, RULE_FLYING
+        bnez    $t0, el_flying
+        j       el_distance
+el_man:
         # a black man goes up the board (rows decrease), a red one down
         andi    $t0, $t6, BLACK
         slt     $t1, $s3, $zero
         xor     $t0, $t0, $t1
-        bnez    $t0, el_forward
+        beqz    $t0, el_distance
+        # going backwards is only fine where the rules allow it
+        li      $t0, RULE_MOVE_BACK
+        beq     $s4, 1, el_back_rule
+        li      $t0, RULE_JUMP_BACK
+        bne     $s4, 2, el_forward
+el_back_rule:
+        and     $t0, $t0, $t7
+        beqz    $t0, el_forward
 
 el_distance:
         beq     $s4, 1, el_step
@@ -177,10 +213,60 @@ el_distance:
         add     $t1, $t1, $t0
         lbu     $t1, 0($t1)
         beqz    $t1, el_nothing
+        andi    $t2, $t1, GHOST
+        bnez    $t2, el_ghost
         lw      $t2, turn
         and     $t1, $t1, $t2
         bnez    $t1, el_own
-        j       el_not_now
+        j       el_other_jump
+
+el_flying:
+        # walk from the king to the landing square and see what is in between
+        sub     $t0, $s2, $s0
+        div     $t0, $s4
+        mflo    $t0                     # one diagonal step
+        add     $t1, $s0, $t0
+        li      $t3, 0                  # enemy pieces on the way
+el_walk:
+        beq     $t1, $s2, el_walked
+        la      $t4, board
+        add     $t4, $t4, $t1
+        lbu     $t4, 0($t4)
+        beqz    $t4, el_walk_next
+        andi    $t5, $t4, GHOST
+        bnez    $t5, el_ghost
+        lw      $t5, turn
+        and     $t5, $t4, $t5
+        bnez    $t5, el_blocked
+        addi    $t3, $t3, 1
+el_walk_next:
+        add     $t1, $t1, $t0
+        j       el_walk
+el_walked:
+        beqz    $t3, el_step
+        bgt     $t3, 1, el_two
+        # a real jump, so one of the capture rules must be against it
+
+el_other_jump:
+        lw      $t0, rule_flags
+        andi    $t1, $t0, RULE_LONGEST
+        bnez    $t1, el_longest
+        andi    $t1, $t0, RULE_FLYING
+        beqz    $t1, el_not_now
+        print_str(why_land)
+        j       el_done
+el_longest:
+        print_str(why_longest)
+        j       el_done
+el_ghost:
+        print_str(why_ghost)
+        j       el_done
+el_blocked:
+        print_str(why_blocked)
+        j       el_done
+el_two:
+        print_str(why_two)
+        j       el_done
 
 el_step:
         lw      $t0, chain_piece

@@ -14,6 +14,7 @@ msg_bye:        .asciiz "Game stopped.\n"
 msg_restart:    .asciiz "Starting over.\n"
 msg_captured:   .asciiz "Captured "
 msg_s_piece:    .asciiz "'s piece.\n"
+msg_crowned:    .asciiz "'s man becomes a king.\n"
 msg_chain:      .asciiz "Chaining possible.\n"
 msg_no_pieces:  .asciiz " has no pieces left.\n"
 msg_no_moves:   .asciiz " has no legal moves.\n"
@@ -165,6 +166,12 @@ g_play:
         jal     print_side
         print_str(msg_s_piece)
 g_played:
+        andi    $t0, $s1, STEP_PROMOTED
+        beqz    $t0, g_next
+        move    $a0, $s0
+        jal     print_side
+        print_str(msg_crowned)
+g_next:
         andi    $t0, $s1, STEP_CHAIN
         bnez    $t0, g_chain
         # turn over: an offer the mover did not accept is off the table,

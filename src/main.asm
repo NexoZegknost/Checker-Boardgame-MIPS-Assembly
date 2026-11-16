@@ -23,8 +23,9 @@ msg_rules:      .ascii  "\nHow to play\n"
                 .ascii  "- The dark squares are numbered row by row from the top left; the\n"
                 .ascii  "  framed board style in the settings shows the numbers.\n"
                 .ascii  "- During a game type h to see the extra commands.\n"
-                .ascii  "- These are the rules of the base game. The settings can make capturing\n"
-                .asciiz "  mandatory or switch to a 10x10 board.\n"
+                .ascii  "- These are the rules of the base game. Under Settings you can switch to\n"
+                .ascii  "  English, International, Brazilian or Russian draughts, or mix your own\n"
+                .asciiz "  rules (mandatory capture, 10x10 board, flying kings and so on).\n"
 
 .text
 main:

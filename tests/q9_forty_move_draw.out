@@ -869,8 +869,9 @@ How to play
 - The dark squares are numbered row by row from the top left; the
   framed board style in the settings shows the numbers.
 - During a game type h to see the extra commands.
-- These are the rules of the base game. The settings can make capturing
-  mandatory or switch to a 10x10 board.
+- These are the rules of the base game. Under Settings you can switch to
+  English, International, Brazilian or Russian draughts, or mix your own
+  rules (mandatory capture, 10x10 board, flying kings and so on).
 
  1) New game
  2) Settings

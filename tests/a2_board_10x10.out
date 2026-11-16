@@ -23,18 +23,36 @@ Settings (pick a line to change it)
  0) Back
 > 
 Custom rules (pick a line to change it)
- 1) Board            : 8x8, 12 men each
- 2) Mandatory capture: off
+ 1) Board                : 8x8, 12 men each
+ 2) Mandatory capture    : off
+ 3) Longest capture first: off
+ 4) Flying kings         : off
+ 5) Men capture backwards: off
+ 6) Men move backwards   : off
+ 7) A man is crowned     : as soon as it reaches the last row
+ 8) Jumped pieces go     : at once
  0) Back
 > 
 Custom rules (pick a line to change it)
- 1) Board            : 10x10, 15 men each
- 2) Mandatory capture: off
+ 1) Board                : 10x10, 15 men each
+ 2) Mandatory capture    : off
+ 3) Longest capture first: off
+ 4) Flying kings         : off
+ 5) Men capture backwards: off
+ 6) Men move backwards   : off
+ 7) A man is crowned     : as soon as it reaches the last row
+ 8) Jumped pieces go     : at once
  0) Back
 > 
 Custom rules (pick a line to change it)
- 1) Board            : 10x10, 20 men each
- 2) Mandatory capture: off
+ 1) Board                : 10x10, 20 men each
+ 2) Mandatory capture    : off
+ 3) Longest capture first: off
+ 4) Flying kings         : off
+ 5) Men capture backwards: off
+ 6) Men move backwards   : off
+ 7) A man is crowned     : as soon as it reaches the last row
+ 8) Jumped pieces go     : at once
  0) Back
 > 
 Settings (pick a line to change it)
@@ -138,18 +156,36 @@ Settings (pick a line to change it)
  0) Back
 > 
 Custom rules (pick a line to change it)
- 1) Board            : 10x10, 20 men each
- 2) Mandatory capture: off
+ 1) Board                : 10x10, 20 men each
+ 2) Mandatory capture    : off
+ 3) Longest capture first: off
+ 4) Flying kings         : off
+ 5) Men capture backwards: off
+ 6) Men move backwards   : off
+ 7) A man is crowned     : as soon as it reaches the last row
+ 8) Jumped pieces go     : at once
  0) Back
 > 
 Custom rules (pick a line to change it)
- 1) Board            : 8x8, 12 men each
- 2) Mandatory capture: off
+ 1) Board                : 8x8, 12 men each
+ 2) Mandatory capture    : off
+ 3) Longest capture first: off
+ 4) Flying kings         : off
+ 5) Men capture backwards: off
+ 6) Men move backwards   : off
+ 7) A man is crowned     : as soon as it reaches the last row
+ 8) Jumped pieces go     : at once
  0) Back
 > 
 Custom rules (pick a line to change it)
- 1) Board            : 10x10, 15 men each
- 2) Mandatory capture: off
+ 1) Board                : 10x10, 15 men each
+ 2) Mandatory capture    : off
+ 3) Longest capture first: off
+ 4) Flying kings         : off
+ 5) Men capture backwards: off
+ 6) Men move backwards   : off
+ 7) A man is crowned     : as soon as it reaches the last row
+ 8) Jumped pieces go     : at once
  0) Back
 > 
 Settings (pick a line to change it)

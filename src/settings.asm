@@ -7,8 +7,8 @@
 
 .eqv RULES_ROW   4              # line of the rule set in the settings menu
 .eqv CUSTOM_ROW  5              # "Custom rules..." comes right after the option lines
-.eqv CUSTOM_SET  2              # value of opt_rules that means "leave the rules alone"
-.eqv RULE_VARS   2              # words in one preset row
+.eqv CUSTOM_SET  5              # value of opt_rules that means "leave the rules alone"
+.eqv RULE_VARS   8              # words in one preset row
 
 .data
 opt_view:       .word 0         # 0 = plain, 1 = framed with square numbers
@@ -19,10 +19,21 @@ opt_rules:      .word 0         # index into presets, or CUSTOM_SET
 # The single rules. A preset is just a row of values for these, in this order.
 rule_vars:
 rule_board:     .word 0         # 0 = 8x8, 1 = 10x10 with 15 men, 2 = 10x10 with 20 men
-rule_must:      .word 0         # capturing is mandatory
+# from here on the order is the order of the RULE_ bits
+rule_must:      .word 0
+rule_longest:   .word 0
+rule_flying:    .word 0
+rule_jump_back: .word 0
+rule_move_back: .word 0
+rule_crown:     .word 0
+rule_remove:    .word 0
 
-presets:        .word 0, 0      # assignment
-                .word 0, 1      # English draughts
+#                     board must long fly jback mback crown remove
+presets:        .word 0,    0,   0,   0,  0,    0,    0,    0   # assignment
+                .word 0,    1,   0,   0,  0,    0,    0,    0   # English
+                .word 2,    1,   1,   1,  1,    0,    1,    1   # International
+                .word 0,    1,   1,   1,  1,    0,    1,    1   # Brazilian
+                .word 0,    1,   0,   1,  1,    0,    0,    1   # Russian
 
 msg_choice:     .asciiz "> "
 str_item:       .asciiz ") "
@@ -48,13 +59,26 @@ input_list:     .asciiz "choose a piece, then a move from a list"
 lbl_rules:      .asciiz "Rules        : "
 rules_base:     .asciiz "assignment (capturing is optional)"
 rules_english:  .asciiz "English draughts (capturing is mandatory)"
+rules_intl:     .asciiz "International draughts (10x10, flying kings, longest capture)"
+rules_brazil:   .asciiz "Brazilian draughts (International rules on 8x8)"
+rules_russian:  .asciiz "Russian draughts (8x8, flying kings)"
 rules_custom:   .asciiz "custom"
 
-lbl_board:      .asciiz "Board            : "
+lbl_board:      .asciiz "Board                : "
 board_8:        .asciiz "8x8, 12 men each"
 board_10_15:    .asciiz "10x10, 15 men each"
 board_10_20:    .asciiz "10x10, 20 men each"
-lbl_must:       .asciiz "Mandatory capture: "
+lbl_must:       .asciiz "Mandatory capture    : "
+lbl_longest:    .asciiz "Longest capture first: "
+lbl_flying:     .asciiz "Flying kings         : "
+lbl_jump_back:  .asciiz "Men capture backwards: "
+lbl_move_back:  .asciiz "Men move backwards   : "
+lbl_crown:      .asciiz "A man is crowned     : "
+crown_now:      .asciiz "as soon as it reaches the last row"
+crown_late:     .asciiz "only if its move ends on the last row"
+lbl_remove:     .asciiz "Jumped pieces go     : "
+remove_now:     .asciiz "at once"
+remove_late:    .asciiz "when the turn is over"
 str_off:        .asciiz "off"
 str_on:         .asciiz "on"
 
@@ -62,7 +86,9 @@ str_on:         .asciiz "on"
 view_names:     .word view_plain, view_framed
 persp_names:    .word persp_fixed, persp_turn, persp_both
 input_names:    .word input_type, input_list
-rules_names:    .word rules_base, rules_english, rules_custom
+rules_names:    .word rules_base, rules_english, rules_intl, rules_brazil, rules_russian, rules_custom
+crown_names:    .word crown_now, crown_late
+remove_names:   .word remove_now, remove_late
 board_names:    .word board_8, board_10_15, board_10_20
 onoff_names:    .word str_off, str_on
 
@@ -70,17 +96,23 @@ onoff_names:    .word str_off, str_on
 options:        .word lbl_view,  opt_view,  2, view_names
                 .word lbl_persp, opt_persp, 3, persp_names
                 .word lbl_input, opt_input, 2, input_names
-                .word lbl_rules, opt_rules, 3, rules_names
+                .word lbl_rules, opt_rules, 6, rules_names
 options_end:
 
 custom_rows:    .word lbl_board, rule_board, 3, board_names
                 .word lbl_must,  rule_must,  2, onoff_names
+                .word lbl_longest,   rule_longest,   2, onoff_names
+                .word lbl_flying,    rule_flying,    2, onoff_names
+                .word lbl_jump_back, rule_jump_back, 2, onoff_names
+                .word lbl_move_back, rule_move_back, 2, onoff_names
+                .word lbl_crown,     rule_crown,     2, crown_names
+                .word lbl_remove,    rule_remove,    2, remove_names
 custom_end:
 
 # what run_menu needs: title, rows, end of rows, text under the rows,
 # highest number that may be typed
 settings_desc:  .word msg_settings, options, options_end, msg_settings_f, CUSTOM_ROW
-custom_desc:    .word msg_custom, custom_rows, custom_end, msg_custom_f, 2
+custom_desc:    .word msg_custom, custom_rows, custom_end, msg_custom_f, 8
 
 .text
 
@@ -213,10 +245,22 @@ rc_board:
         sw      $t0, board_n
         sw      $t1, men_rows
 
+        # "longest capture first" makes no sense unless capturing is mandatory
+        lw      $t0, rule_longest
+        beqz    $t0, rc_pack
+        sw      $t0, rule_must
+rc_pack:
+        # one bit per rule, in the order they are stored
+        la      $t1, rule_must
         li      $t0, 0
-        lw      $t1, rule_must
-        beqz    $t1, rc_flags
-        ori     $t0, $t0, RULE_MUST_CAPTURE
-rc_flags:
+        li      $t2, 1
+rc_bit:
+        lw      $t3, 0($t1)
+        beqz    $t3, rc_next
+        or      $t0, $t0, $t2
+rc_next:
+        addi    $t1, $t1, 4
+        sll     $t2, $t2, 1
+        ble     $t2, RULE_REMOVE_LATE, rc_bit
         sw      $t0, rule_flags
         jr      $ra
