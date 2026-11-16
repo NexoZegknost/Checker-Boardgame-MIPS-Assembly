@@ -19,6 +19,10 @@ msg_chain:      .asciiz "Chaining possible.\n"
 msg_no_pieces:  .asciiz " has no pieces left.\n"
 msg_no_moves:   .asciiz " has no legal moves.\n"
 msg_wins:       .asciiz " wins!\n"
+msg_pick:       .asciiz "Choose a piece: "
+msg_other:      .asciiz " 0) choose another piece\n"
+msg_choice:     .asciiz "Your choice: "
+msg_bad_pick:   .asciiz "Please pick a number from the list.\n"
 
 .text
 
@@ -62,6 +66,19 @@ g_announce:
         lw      $a0, turn
         jal     print_side
         print_str(msg_turn)
+
+g_input:
+        # four ways to ask, depending on the entry mode and on whether a
+        # chain of jumps is open
+        lw      $t0, chain_piece
+        lw      $t1, opt_input
+        bnez    $t1, g_input_list
+        bnez    $t0, g_chain_ask
+        j       g_ask
+g_input_list:
+        move    $s2, $t0
+        bnez    $t0, g_list
+        j       g_pick
 
 g_ask:
         la      $a0, msg_ask_start
@@ -109,6 +126,8 @@ g_played:
         jal     display_board
         print_str(msg_chain)
         jal     gen_legal
+        j       g_input
+
 g_chain_ask:
         la      $a0, msg_ask_land
         jal     prompt_line
@@ -132,10 +151,43 @@ g_command:
         beq     $v1, 'q', g_quit
         beq     $v1, 'r', g_restart
         print_str(msg_unknown)
-g_reprompt:
+        j       g_input
+
+# list entry: first the piece, then one of its moves by number
+g_pick:
+        jal     list_movable
+        la      $a0, msg_pick
+        jal     prompt_line
+        beq     $v0, P_CMD, g_command
+        move    $a0, $v1
+        move    $a1, $v0
+        jal     explain_start
+        beqz    $v0, g_pick
+        move    $s2, $v0
+g_list:
+        move    $a0, $s2
+        jal     list_moves
+        move    $s3, $v0
         lw      $t0, chain_piece
-        bnez    $t0, g_chain_ask
-        j       g_ask
+        bnez    $t0, g_list_ask         # no way back while a chain is open
+        print_str(msg_other)
+g_list_ask:
+        la      $a0, msg_choice
+        jal     prompt_line
+        beq     $v0, P_CMD, g_command
+        bne     $v0, P_NUM, g_list_bad
+        bgt     $v1, $s3, g_list_bad
+        bnez    $v1, g_list_take
+        lw      $t0, chain_piece
+        beqz    $t0, g_pick
+g_list_bad:
+        print_str(msg_bad_pick)
+        j       g_list
+g_list_take:
+        move    $a0, $s2
+        move    $a1, $v1
+        jal     nth_move
+        j       g_play
 g_restart:
         print_str(msg_restart)
         j       g_new

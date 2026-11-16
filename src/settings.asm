@@ -2,12 +2,13 @@
 
 .include "include/constants.inc"
 
-.globl opt_view, opt_persp
+.globl opt_view, opt_persp, opt_input
 .globl settings_menu
 
 .data
 opt_view:       .word 0         # 0 = plain, 1 = framed with square numbers
 opt_persp:      .word 0         # 0 = fixed, 1 = board turns, 2 = board and numbers turn
+opt_input:      .word 0         # 0 = type both squares, 1 = choose from a list
 
 msg_header:     .asciiz "\nSettings (pick a line to change it)\n"
 msg_back:       .asciiz " 0) Back\n"
@@ -23,13 +24,19 @@ persp_fixed:    .asciiz "Black always at the bottom"
 persp_turn:     .asciiz "board turns to the player to move"
 persp_both:     .asciiz "board and square numbers turn to the player to move"
 
+lbl_input:      .asciiz "Move entry  : "
+input_type:     .asciiz "type the starting and landing squares"
+input_list:     .asciiz "choose a piece, then a move from a list"
+
                 .align 2
 view_names:     .word view_plain, view_framed
 persp_names:    .word persp_fixed, persp_turn, persp_both
+input_names:    .word input_type, input_list
 
 # one row per option: label, variable, how many values, names of the values
 options:        .word lbl_view,  opt_view,  2, view_names
                 .word lbl_persp, opt_persp, 3, persp_names
+                .word lbl_input, opt_input, 2, input_names
 options_end:
 
 .text
