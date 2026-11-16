@@ -14,6 +14,10 @@ msg_bye:        .asciiz "Game stopped.\n"
 msg_restart:    .asciiz "Starting over.\n"
 msg_captured:   .asciiz "Captured "
 msg_s_piece:    .asciiz "'s piece.\n"
+msg_computer:   .asciiz "The computer plays "
+str_end:        .asciiz ".\n"
+msg_declined:   .asciiz "The computer wants to play on.\n"
+msg_accepted:   .asciiz "The computer accepts the draw.\n"
 msg_crowned:    .asciiz "'s man becomes a king.\n"
 msg_chain:      .asciiz "Chaining possible.\n"
 msg_no_pieces:  .asciiz " has no pieces left.\n"
@@ -98,6 +102,8 @@ g_announce:
         print_str(msg_turn)
 
         # remind the player of a draw offer made by the other side
+        lw      $t0, opt_opponent
+        bnez    $t0, g_input
         lw      $t0, draw_offer
         lw      $t1, turn
         xori    $t2, $t1, COLOR_MASK
@@ -111,6 +117,20 @@ g_announce:
         print_str(msg_can_accept)
 
 g_input:
+        lw      $t0, opt_opponent
+        beqz    $t0, g_human
+        lw      $t0, turn
+        bne     $t0, RED, g_human
+        jal     ai_choose
+        move    $s2, $v0
+        print_str(msg_computer)
+        move    $a0, $s2
+        jal     print_move
+        print_str(str_end)
+        move    $v0, $s2
+        j       g_play
+
+g_human:
         # four ways to ask, depending on the entry mode and on whether a
         # chain of jumps is open
         lw      $t0, chain_piece
@@ -223,11 +243,15 @@ g_log:
         jal     log_print
         j       g_input
 g_undo:
-        # in the middle of a chain only the chain is taken back
-        li      $a0, 2
-        lw      $t0, chain_piece
-        beqz    $t0, g_undo_go
+        # in the middle of a chain only the chain is taken back; against the
+        # computer its reply has to go as well
         li      $a0, 1
+        lw      $t0, chain_piece
+        bnez    $t0, g_undo_go
+        li      $a0, 2
+        lw      $t0, opt_opponent
+        beqz    $t0, g_undo_go
+        li      $a0, 3
 g_undo_go:
         jal     undo_back
         bnez    $v0, g_undo_ok
@@ -237,6 +261,16 @@ g_undo_ok:
         print_str(msg_undone)
         j       g_turn
 g_draw:
+        lw      $t0, opt_opponent
+        beqz    $t0, g_draw_human
+        jal     ai_accepts_draw
+        bnez    $v0, g_draw_taken
+        print_str(msg_declined)
+        j       g_input
+g_draw_taken:
+        print_str(msg_accepted)
+        j       g_over
+g_draw_human:
         lw      $s0, turn
         lw      $t0, draw_offer
         xori    $t1, $s0, COLOR_MASK

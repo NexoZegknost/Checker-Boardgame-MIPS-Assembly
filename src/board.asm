@@ -196,6 +196,8 @@ set_perspective:
         sw      $zero, num_flip
         lw      $t0, turn
         bne     $t0, RED, sp_done
+        lw      $t0, opt_opponent       # nobody sits on Red's side then
+        bnez    $t0, sp_done
         lw      $t0, opt_persp
         beqz    $t0, sp_done
         li      $t1, 1

@@ -2,11 +2,11 @@
 
 .include "include/constants.inc"
 
-.globl opt_view, opt_persp, opt_input
+.globl opt_view, opt_persp, opt_input, opt_opponent
 .globl settings_menu
 
 .eqv RULES_ROW   4              # line of the rule set in the settings menu
-.eqv CUSTOM_ROW  5              # "Custom rules..." comes right after the option lines
+.eqv CUSTOM_ROW  6              # "Custom rules..." comes right after the option lines
 .eqv CUSTOM_SET  5              # value of opt_rules that means "leave the rules alone"
 .eqv RULE_VARS   8              # words in one preset row
 
@@ -15,6 +15,7 @@ opt_view:       .word 0         # 0 = plain, 1 = framed with square numbers
 opt_persp:      .word 0         # 0 = fixed, 1 = board turns, 2 = board and numbers turn
 opt_input:      .word 0         # 0 = type both squares, 1 = choose from a list
 opt_rules:      .word 0         # index into presets, or CUSTOM_SET
+opt_opponent:   .word 0         # 0 = second player, 1-3 = computer plays Red (easy, medium, hard)
 
 # The single rules. A preset is just a row of values for these, in this order.
 rule_vars:
@@ -39,7 +40,7 @@ msg_choice:     .asciiz "> "
 str_item:       .asciiz ") "
 
 msg_settings:   .asciiz "\nSettings (pick a line to change it)\n"
-msg_settings_f: .asciiz " 5) Custom rules...\n 0) Back\n"
+msg_settings_f: .asciiz " 6) Custom rules...\n 0) Back\n"
 msg_custom:     .asciiz "\nCustom rules (pick a line to change it)\n"
 msg_custom_f:   .asciiz " 0) Back\n"
 
@@ -64,6 +65,12 @@ rules_brazil:   .asciiz "Brazilian draughts (International rules on 8x8)"
 rules_russian:  .asciiz "Russian draughts (8x8, flying kings)"
 rules_custom:   .asciiz "custom"
 
+lbl_opponent:   .asciiz "Red is played: "
+opp_human:      .asciiz "by a second player"
+opp_easy:       .asciiz "by the computer, easy (random moves)"
+opp_medium:     .asciiz "by the computer, medium"
+opp_hard:       .asciiz "by the computer, hard (slow in MARS)"
+
 lbl_board:      .asciiz "Board                : "
 board_8:        .asciiz "8x8, 12 men each"
 board_10_15:    .asciiz "10x10, 15 men each"
@@ -87,6 +94,7 @@ view_names:     .word view_plain, view_framed
 persp_names:    .word persp_fixed, persp_turn, persp_both
 input_names:    .word input_type, input_list
 rules_names:    .word rules_base, rules_english, rules_intl, rules_brazil, rules_russian, rules_custom
+opp_names:      .word opp_human, opp_easy, opp_medium, opp_hard
 crown_names:    .word crown_now, crown_late
 remove_names:   .word remove_now, remove_late
 board_names:    .word board_8, board_10_15, board_10_20
@@ -97,6 +105,7 @@ options:        .word lbl_view,  opt_view,  2, view_names
                 .word lbl_persp, opt_persp, 3, persp_names
                 .word lbl_input, opt_input, 2, input_names
                 .word lbl_rules, opt_rules, 6, rules_names
+                .word lbl_opponent, opt_opponent, 4, opp_names
 options_end:
 
 custom_rows:    .word lbl_board, rule_board, 3, board_names
