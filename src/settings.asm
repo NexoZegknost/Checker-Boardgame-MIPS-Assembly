@@ -1,21 +1,38 @@
-# Game options and the menu that changes them.
+# Game options and the menus that change them.
 
 .include "include/constants.inc"
 
 .globl opt_view, opt_persp, opt_input
 .globl settings_menu
 
+.eqv RULES_ROW   4              # line of the rule set in the settings menu
+.eqv CUSTOM_ROW  5              # "Custom rules..." comes right after the option lines
+.eqv CUSTOM_SET  2              # value of opt_rules that means "leave the rules alone"
+.eqv RULE_VARS   2              # words in one preset row
+
 .data
 opt_view:       .word 0         # 0 = plain, 1 = framed with square numbers
 opt_persp:      .word 0         # 0 = fixed, 1 = board turns, 2 = board and numbers turn
 opt_input:      .word 0         # 0 = type both squares, 1 = choose from a list
+opt_rules:      .word 0         # index into presets, or CUSTOM_SET
 
-msg_header:     .asciiz "\nSettings (pick a line to change it)\n"
-msg_back:       .asciiz " 0) Back\n"
+# The single rules. A preset is just a row of values for these, in this order.
+rule_vars:
+rule_board:     .word 0         # 0 = 8x8, 1 = 10x10 with 15 men, 2 = 10x10 with 20 men
+rule_must:      .word 0         # capturing is mandatory
+
+presets:        .word 0, 0      # assignment
+                .word 0, 1      # English draughts
+
 msg_choice:     .asciiz "> "
 str_item:       .asciiz ") "
 
-lbl_view:       .asciiz "Board style : "
+msg_settings:   .asciiz "\nSettings (pick a line to change it)\n"
+msg_settings_f: .asciiz " 5) Custom rules...\n 0) Back\n"
+msg_custom:     .asciiz "\nCustom rules (pick a line to change it)\n"
+msg_custom_f:   .asciiz " 0) Back\n"
+
+lbl_view:       .asciiz "Board style  : "
 view_plain:     .asciiz "plain, as in the assignment"
 view_framed:    .asciiz "framed, with square numbers"
 
@@ -24,33 +41,89 @@ persp_fixed:    .asciiz "Black always at the bottom"
 persp_turn:     .asciiz "board turns to the player to move"
 persp_both:     .asciiz "board and square numbers turn to the player to move"
 
-lbl_input:      .asciiz "Move entry  : "
+lbl_input:      .asciiz "Move entry   : "
 input_type:     .asciiz "type the starting and landing squares"
 input_list:     .asciiz "choose a piece, then a move from a list"
+
+lbl_rules:      .asciiz "Rules        : "
+rules_base:     .asciiz "assignment (capturing is optional)"
+rules_english:  .asciiz "English draughts (capturing is mandatory)"
+rules_custom:   .asciiz "custom"
+
+lbl_board:      .asciiz "Board            : "
+board_8:        .asciiz "8x8, 12 men each"
+board_10_15:    .asciiz "10x10, 15 men each"
+board_10_20:    .asciiz "10x10, 20 men each"
+lbl_must:       .asciiz "Mandatory capture: "
+str_off:        .asciiz "off"
+str_on:         .asciiz "on"
 
                 .align 2
 view_names:     .word view_plain, view_framed
 persp_names:    .word persp_fixed, persp_turn, persp_both
 input_names:    .word input_type, input_list
+rules_names:    .word rules_base, rules_english, rules_custom
+board_names:    .word board_8, board_10_15, board_10_20
+onoff_names:    .word str_off, str_on
 
 # one row per option: label, variable, how many values, names of the values
 options:        .word lbl_view,  opt_view,  2, view_names
                 .word lbl_persp, opt_persp, 3, persp_names
                 .word lbl_input, opt_input, 2, input_names
+                .word lbl_rules, opt_rules, 3, rules_names
 options_end:
+
+custom_rows:    .word lbl_board, rule_board, 3, board_names
+                .word lbl_must,  rule_must,  2, onoff_names
+custom_end:
+
+# what run_menu needs: title, rows, end of rows, text under the rows,
+# highest number that may be typed
+settings_desc:  .word msg_settings, options, options_end, msg_settings_f, CUSTOM_ROW
+custom_desc:    .word msg_custom, custom_rows, custom_end, msg_custom_f, 2
 
 .text
 
 settings_menu:
-        addi    $sp, $sp, -12
-        sw      $ra, 8($sp)
-        sw      $s0, 4($sp)
-        sw      $s1, 0($sp)
-sm_show:
-        print_str(msg_header)
-        la      $s0, options
+        push    ($ra)
+sm_again:
+        la      $a0, settings_desc
+        jal     run_menu
+        beqz    $v0, sm_leave
+        beq     $v0, CUSTOM_ROW, sm_custom
+        bne     $v0, RULES_ROW, sm_again
+        jal     load_preset
+        j       sm_again
+sm_custom:
+        la      $a0, custom_desc
+        jal     run_menu
+        beqz    $v0, sm_again
+        # the player changed a single rule, so it is no longer one of the presets
+        li      $t0, CUSTOM_SET
+        sw      $t0, opt_rules
+        jal     rules_commit
+        j       sm_custom
+sm_leave:
+        pop     ($ra)
+        jr      $ra
+
+# Shows the menu described at a0 and reads a choice until it is usable.
+# Picking an option line moves that option on to its next value.
+# v0 = the number picked (0 = back).
+run_menu:
+        addi    $sp, $sp, -16
+        sw      $ra, 12($sp)
+        sw      $s0, 8($sp)
+        sw      $s1, 4($sp)
+        sw      $s2, 0($sp)
+        move    $s2, $a0
+rm_show:
+        lw      $a0, 0($s2)
+        li      $v0, SYS_PRINT_STR
+        syscall
+        lw      $s0, 4($s2)
         li      $s1, 1
-sm_line:
+rm_line:
         print_chr(' ')
         print_num($s1)
         print_str(str_item)
@@ -68,33 +141,82 @@ sm_line:
         print_chr('\n')
         addi    $s0, $s0, 16
         addi    $s1, $s1, 1
-        la      $t0, options_end
-        blt     $s0, $t0, sm_line
-        print_str(msg_back)
+        lw      $t0, 8($s2)
+        blt     $s0, $t0, rm_line
+        lw      $a0, 12($s2)
+        li      $v0, SYS_PRINT_STR
+        syscall
 
         la      $a0, msg_choice
         jal     prompt_number
-        beqz    $v0, sm_done
-        blez    $v0, sm_show
-        bge     $v0, $s1, sm_show
+        bltz    $v0, rm_show
+        lw      $t0, 16($s2)
+        bgt     $v0, $t0, rm_show
+        beqz    $v0, rm_done
+        bge     $v0, $s1, rm_done       # not an option line, the caller deals with it
 
         # step the chosen option to its next value, wrapping around
-        addi    $v0, $v0, -1
-        sll     $v0, $v0, 4
-        la      $t0, options
-        add     $t0, $t0, $v0
+        addi    $t0, $v0, -1
+        sll     $t0, $t0, 4
+        lw      $t1, 4($s2)
+        add     $t0, $t1, $t0
         lw      $t1, 4($t0)
         lw      $t2, 0($t1)
         addi    $t2, $t2, 1
         lw      $t3, 8($t0)
-        blt     $t2, $t3, sm_store
+        blt     $t2, $t3, rm_store
         li      $t2, 0
-sm_store:
+rm_store:
         sw      $t2, 0($t1)
-        j       sm_show
-sm_done:
-        lw      $s1, 0($sp)
-        lw      $s0, 4($sp)
-        lw      $ra, 8($sp)
-        addi    $sp, $sp, 12
+rm_done:
+        lw      $s2, 0($sp)
+        lw      $s1, 4($sp)
+        lw      $s0, 8($sp)
+        lw      $ra, 12($sp)
+        addi    $sp, $sp, 16
+        jr      $ra
+
+# Copies the preset chosen in opt_rules into the single rules.
+load_preset:
+        push    ($ra)
+        lw      $t0, opt_rules
+        beq     $t0, CUSTOM_SET, lp_done
+        mul     $t0, $t0, RULE_VARS
+        sll     $t0, $t0, 2
+        la      $t1, presets
+        add     $t1, $t1, $t0
+        la      $t2, rule_vars
+        li      $t3, RULE_VARS
+lp_copy:
+        lw      $t4, 0($t1)
+        sw      $t4, 0($t2)
+        addi    $t1, $t1, 4
+        addi    $t2, $t2, 4
+        addi    $t3, $t3, -1
+        bgtz    $t3, lp_copy
+        jal     rules_commit
+lp_done:
+        pop     ($ra)
+        jr      $ra
+
+# Turns the single rules into what the engine reads:
+# rule_flags, board_n and men_rows.
+rules_commit:
+        li      $t0, 8
+        li      $t1, 3
+        lw      $t2, rule_board
+        beqz    $t2, rc_board
+        li      $t0, 10
+        beq     $t2, 1, rc_board
+        li      $t1, 4
+rc_board:
+        sw      $t0, board_n
+        sw      $t1, men_rows
+
+        li      $t0, 0
+        lw      $t1, rule_must
+        beqz    $t1, rc_flags
+        ori     $t0, $t0, RULE_MUST_CAPTURE
+rc_flags:
+        sw      $t0, rule_flags
         jr      $ra

@@ -2,11 +2,12 @@
 
 .include "include/constants.inc"
 
-.globl apply_step
+.globl apply_step, rule_flags
 
 .data
                 .align 2
-scratch_moves:  .space 64
+rule_flags:     .word 0
+scratch_moves:  .space 160
 
 .text
 

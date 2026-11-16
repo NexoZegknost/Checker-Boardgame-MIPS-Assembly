@@ -7,15 +7,19 @@
  0) Quit
 > 
 Settings (pick a line to change it)
- 1) Board style : plain, as in the assignment
+ 1) Board style  : plain, as in the assignment
  2) Point of view: Black always at the bottom
- 3) Move entry  : type the starting and landing squares
+ 3) Move entry   : type the starting and landing squares
+ 4) Rules        : assignment (capturing is optional)
+ 5) Custom rules...
  0) Back
 > 
 Settings (pick a line to change it)
- 1) Board style : plain, as in the assignment
+ 1) Board style  : plain, as in the assignment
  2) Point of view: Black always at the bottom
- 3) Move entry  : choose a piece, then a move from a list
+ 3) Move entry   : choose a piece, then a move from a list
+ 4) Rules        : assignment (capturing is optional)
+ 5) Custom rules...
  0) Back
 > 
  1) New game

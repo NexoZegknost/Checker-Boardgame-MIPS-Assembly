@@ -16,6 +16,9 @@
 .eqv WALL        8
 .eqv COLOR_MASK  3
 
+# bits of rule_flags, all off = the base game from the assignment
+.eqv RULE_MUST_CAPTURE  1
+
 # result of parse_line
 .eqv P_BAD       0
 .eqv P_NUM       1

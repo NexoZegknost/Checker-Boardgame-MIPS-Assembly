@@ -23,6 +23,9 @@ why_keep_on:    .asciiz "You must keep capturing with the piece on square "
 why_nothing:    .asciiz "There is no piece to jump over."
 why_own:        .asciiz "You cannot jump over your own piece."
 why_far:        .asciiz " is too far away."
+why_must_a:     .asciiz "You have to capture this turn and the piece on square "
+why_must_b:     .asciiz " cannot."
+why_must:       .asciiz "You have to capture when you can."
 why_not_now:    .asciiz "That move is not allowed here."
 str_dot:        .asciiz "."
 
@@ -92,6 +95,13 @@ es_theirs:
         j       es_fail
 es_stuck:
         print_str(msg_not_valid)
+        jal     capture_forced
+        beqz    $v0, es_blocked
+        print_str(why_must_a)
+        print_num($s0)
+        print_str(why_must_b)
+        j       es_fail
+es_blocked:
         print_str(why_piece_on)
         print_num($s0)
         print_str(why_stuck)
@@ -174,7 +184,12 @@ el_distance:
 
 el_step:
         lw      $t0, chain_piece
-        beqz    $t0, el_not_now
+        bnez    $t0, el_keep_on
+        jal     capture_forced
+        beqz    $v0, el_not_now
+        print_str(why_must)
+        j       el_done
+el_keep_on:
         print_str(why_keep_on)
         move    $a0, $s0
         jal     sq_of_cell
@@ -240,4 +255,19 @@ say_no_square:
         li      $v0, SYS_PRINT_INT
         syscall
         print_str(str_dot)
+        jr      $ra
+
+# v0 = 1 if the legal list holds nothing but jumps because capturing is
+# mandatory. Jumps are generated first, so looking at the first entry is enough.
+capture_forced:
+        li      $v0, 0
+        lw      $t0, rule_flags
+        andi    $t0, $t0, RULE_MUST_CAPTURE
+        beqz    $t0, cf_done
+        lw      $t0, legal_count
+        beqz    $t0, cf_done
+        lw      $t0, legal_buf
+        srl     $t0, $t0, 16
+        sne     $v0, $t0, $zero
+cf_done:
         jr      $ra

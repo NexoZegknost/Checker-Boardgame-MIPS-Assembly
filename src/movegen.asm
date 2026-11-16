@@ -137,7 +137,14 @@ gl_next:
         lw      $t0, num_squares
         ble     $s1, $t0, gl_square
         addi    $s2, $s2, 1
-        blt     $s2, 2, gl_pass
+        bge     $s2, 2, gl_count
+        # with mandatory capture the plain moves only count when nothing can jump
+        la      $t0, legal_buf
+        beq     $s0, $t0, gl_pass
+        lw      $t0, rule_flags
+        andi    $t0, $t0, RULE_MUST_CAPTURE
+        beqz    $t0, gl_pass
+gl_count:
 
         la      $t0, legal_buf
         sub     $v0, $s0, $t0
