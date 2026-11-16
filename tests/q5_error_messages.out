@@ -1,4 +1,8 @@
-  r   r   r   r
+=== Checkers ===
+
+ 1) New game
+ 0) Quit
+>   r   r   r   r
 r   r   r   r
   r   r   r   r
 0   0   0   0
@@ -113,3 +117,7 @@ b   b   0   0
 0   b   b   b
 Red's turn.
 Enter starting square: Game stopped.
+
+ 1) New game
+ 0) Quit
+> Goodbye!

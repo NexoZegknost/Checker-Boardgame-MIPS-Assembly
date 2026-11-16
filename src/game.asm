@@ -1,4 +1,6 @@
 # The game loop: whose turn it is, asking for moves, checking them.
+# While a move is being asked the player can also type r (start over)
+# or q (back to the menu).
 
 .include "include/constants.inc"
 
@@ -10,6 +12,7 @@ msg_ask_start:  .asciiz "Enter starting square: "
 msg_ask_land:   .asciiz "Enter landing square: "
 msg_unknown:    .asciiz "Unknown command.\n"
 msg_bye:        .asciiz "Game stopped.\n"
+msg_restart:    .asciiz "Starting over.\n"
 msg_captured:   .asciiz "Captured "
 msg_s_piece:    .asciiz "'s piece.\n"
 msg_chain:      .asciiz "Chaining possible.\n"
@@ -28,6 +31,7 @@ game_run:
         sw      $s3, 4($sp)
         sw      $s4, 0($sp)
 
+g_new:
         jal     board_reset
 g_turn:
         jal     display_board
@@ -60,7 +64,7 @@ g_announce:
 
 g_ask:
         la      $a0, msg_ask_start
-        jal     ask
+        jal     prompt_line
         beq     $v0, P_CMD, g_command
         move    $a0, $v1
         move    $a1, $v0
@@ -69,7 +73,7 @@ g_ask:
         move    $s2, $v0
 
         la      $a0, msg_ask_land
-        jal     ask
+        jal     prompt_line
         beq     $v0, P_CMD, g_command
         move    $s3, $v1
         move    $s4, $v0
@@ -106,7 +110,7 @@ g_played:
         jal     gen_legal
 g_chain_ask:
         la      $a0, msg_ask_land
-        jal     ask
+        jal     prompt_line
         beq     $v0, P_CMD, g_command
         move    $s3, $v1
         move    $s4, $v0
@@ -125,11 +129,15 @@ g_chain_ask:
 g_command:
         ori     $v1, $v1, 0x20
         beq     $v1, 'q', g_quit
+        beq     $v1, 'r', g_restart
         print_str(msg_unknown)
 g_reprompt:
         lw      $t0, chain_piece
         bnez    $t0, g_chain_ask
         j       g_ask
+g_restart:
+        print_str(msg_restart)
+        j       g_new
 g_quit:
         print_str(msg_bye)
 g_leave:
@@ -140,16 +148,6 @@ g_leave:
         lw      $s0, 16($sp)
         lw      $ra, 20($sp)
         addi    $sp, $sp, 24
-        jr      $ra
-
-# Prints the prompt in a0, reads a line and returns what parse_line says.
-ask:
-        push    ($ra)
-        li      $v0, SYS_PRINT_STR
-        syscall
-        jal     read_line
-        jal     parse_line
-        pop     ($ra)
         jr      $ra
 
 # Looks in legal_buf for the move from cell a0 to cell a1.

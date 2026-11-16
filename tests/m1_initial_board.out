@@ -1,4 +1,8 @@
-  r   r   r   r
+=== Checkers ===
+
+ 1) New game
+ 0) Quit
+>   r   r   r   r
 r   r   r   r
   r   r   r   r
 0   0   0   0
@@ -7,5 +11,6 @@ b   b   b   b
   b   b   b   b
 b   b   b   b
 Black's turn.
+Enter starting square: Not a valid move! There is no square 0, squares go from 1 to 32. Try again.
 Enter starting square: 
 Program terminated when maximum step limit -1 reached.

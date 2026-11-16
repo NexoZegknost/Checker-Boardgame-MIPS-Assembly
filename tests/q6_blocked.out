@@ -1,4 +1,8 @@
-  r   r   r   r
+=== Checkers ===
+
+ 1) New game
+ 0) Quit
+>   r   r   r   r
 r   r   r   r
   r   r   r   r
 0   0   0   0
@@ -197,3 +201,7 @@ b   b   b   b
 0   0   0   b
 Red has no legal moves.
 Black wins!
+
+ 1) New game
+ 0) Quit
+> Goodbye!

@@ -1,4 +1,8 @@
-  r   r   r   r
+=== Checkers ===
+
+ 1) New game
+ 0) Quit
+>   r   r   r   r
 r   r   r   r
   r   r   r   r
 0   0   0   0
@@ -411,3 +415,7 @@ r   0   r   r
 R   R   R   0
 Black has no pieces left.
 Red wins!
+
+ 1) New game
+ 0) Quit
+> Goodbye!

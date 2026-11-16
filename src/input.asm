@@ -3,7 +3,7 @@
 
 .include "include/constants.inc"
 
-.globl read_line, parse_line, parse_arg
+.globl read_line, parse_line, parse_arg, prompt_line, prompt_number
 
 .data
 line_buf:       .space 64
@@ -16,6 +16,27 @@ read_line:
         li      $a1, 64
         li      $v0, SYS_READ_STR
         syscall
+        jr      $ra
+
+# Prints the prompt in a0, reads a line and returns what parse_line says.
+prompt_line:
+        push    ($ra)
+        li      $v0, SYS_PRINT_STR
+        syscall
+        jal     read_line
+        jal     parse_line
+        pop     ($ra)
+        jr      $ra
+
+# Same, for menus: v0 = the number typed, or -1 for anything else.
+prompt_number:
+        push    ($ra)
+        jal     prompt_line
+        beq     $v0, P_NUM, pn_ok
+        li      $v1, -1
+pn_ok:
+        move    $v0, $v1
+        pop     ($ra)
         jr      $ra
 
 # Looks at the line from read_line.
