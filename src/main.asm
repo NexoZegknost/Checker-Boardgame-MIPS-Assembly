@@ -7,8 +7,7 @@
 
 .text
 main:
-        jal     board_reset
-        jal     display_board
+        jal     game_run
 
         li      $v0, SYS_EXIT
         syscall

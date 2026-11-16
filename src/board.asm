@@ -9,7 +9,7 @@
 .globl board, turn, count_black, count_red
 .globl board_n, board_w, men_rows, num_squares, dirs
 .globl sq_to_idx, idx_to_sq
-.globl board_clear, board_reset
+.globl board_clear, board_reset, cell_of_sq
 
 .data
 board:          .space MAX_CELLS
@@ -130,4 +130,17 @@ br_loop:
         sw      $t0, count_black
         sw      $t0, count_red
         pop     ($ra)
+        jr      $ra
+
+# a0 = square number as typed by the player
+# v0 = cell index, or 0 when the number is not on the board
+cell_of_sq:
+        li      $v0, 0
+        blez    $a0, cs_done
+        lw      $t0, num_squares
+        bgt     $a0, $t0, cs_done
+        la      $t0, sq_to_idx
+        add     $t0, $t0, $a0
+        lbu     $v0, 0($t0)
+cs_done:
         jr      $ra

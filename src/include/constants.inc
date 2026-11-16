@@ -16,6 +16,11 @@
 .eqv WALL        8
 .eqv COLOR_MASK  3
 
+# result of parse_line
+.eqv P_BAD       0
+.eqv P_NUM       1
+.eqv P_CMD       2
+
 # the board array is sized for 10x10 plus a one-cell border
 .eqv MAX_CELLS   144
 .eqv MAX_SQUARES 50
