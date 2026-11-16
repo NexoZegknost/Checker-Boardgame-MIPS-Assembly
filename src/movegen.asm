@@ -4,7 +4,13 @@
 
 .include "include/constants.inc"
 
-.globl gen_simple, gen_captures, gen_piece_moves
+.globl gen_simple, gen_captures, gen_legal
+.globl legal_buf, legal_count
+
+.data
+                .align 2
+legal_buf:      .space 1024
+legal_count:    .word 0
 
 .text
 
@@ -86,20 +92,61 @@ gc_next:
         blt     $t4, 4, gc_loop
         jr      $ra
 
-# Every move of one piece, jumps first. Same arguments as above.
-gen_piece_moves:
-        addi    $sp, $sp, -12
-        sw      $ra, 8($sp)
-        sw      $s0, 4($sp)
-        sw      $s1, 0($sp)
-        move    $s0, $a0
+# Fills legal_buf with every step the side to move may play.
+# While a chain is open that is just the jumps of chain_piece.
+# v0 = legal_count = number of moves.
+gen_legal:
+        addi    $sp, $sp, -16
+        sw      $ra, 12($sp)
+        sw      $s0, 8($sp)
+        sw      $s1, 4($sp)
+        sw      $s2, 0($sp)
+
+        la      $s0, legal_buf          # next free slot
+        lw      $a0, chain_piece
+        beqz    $a0, gl_all
+        move    $a1, $s0
         jal     gen_captures
-        move    $s1, $v0
-        move    $a0, $s0                # a1 already points past the jumps
+        j       gl_done
+
+gl_all:
+        li      $s2, 0                  # first pass jumps, second pass plain moves
+gl_pass:
+        li      $s1, 1
+gl_square:
+        la      $t0, sq_to_idx
+        add     $t0, $t0, $s1
+        lbu     $a0, 0($t0)
+        la      $t1, board
+        add     $t1, $t1, $a0
+        lbu     $t1, 0($t1)
+        lw      $t2, turn
+        and     $t1, $t1, $t2
+        beqz    $t1, gl_next
+        move    $a1, $s0
+        beqz    $s2, gl_jumps
         jal     gen_simple
-        add     $v0, $v0, $s1
-        lw      $s1, 0($sp)
-        lw      $s0, 4($sp)
-        lw      $ra, 8($sp)
-        addi    $sp, $sp, 12
+        j       gl_stored
+gl_jumps:
+        jal     gen_captures
+gl_stored:
+        sll     $t0, $v0, 2
+        add     $s0, $s0, $t0
+gl_next:
+        addi    $s1, $s1, 1
+        lw      $t0, num_squares
+        ble     $s1, $t0, gl_square
+        addi    $s2, $s2, 1
+        blt     $s2, 2, gl_pass
+
+        la      $t0, legal_buf
+        sub     $v0, $s0, $t0
+        srl     $v0, $v0, 2
+gl_done:
+        sw      $v0, legal_count
+        lw      $s2, 0($sp)
+        lw      $s1, 4($sp)
+        lw      $s0, 8($sp)
+        lw      $ra, 12($sp)
+        addi    $sp, $sp, 16
         jr      $ra

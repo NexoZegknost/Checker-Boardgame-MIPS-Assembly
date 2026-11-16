@@ -2,11 +2,13 @@
 
 .include "include/constants.inc"
 
-.globl display_board
+.globl display_board, print_side
 
 .data
 # indexed by (cell & 7): empty, b, r, -, -, B, R
 piece_chars:    .ascii "0br??BR?"
+str_black:      .asciiz "Black"
+str_red:        .asciiz "Red"
 
 .text
 
@@ -68,4 +70,15 @@ db_next:
         lw      $s0, 8($sp)
         lw      $ra, 12($sp)
         addi    $sp, $sp, 16
+        jr      $ra
+
+# Prints "Black" or "Red" for the colour in a0.
+print_side:
+        move    $t0, $a0
+        la      $a0, str_black
+        beq     $t0, BLACK, ps_out
+        la      $a0, str_red
+ps_out:
+        li      $v0, SYS_PRINT_STR
+        syscall
         jr      $ra
