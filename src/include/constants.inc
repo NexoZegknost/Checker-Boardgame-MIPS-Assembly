@@ -21,6 +21,11 @@
 .eqv P_NUM       1
 .eqv P_CMD       2
 
+# bits returned by apply_step
+.eqv STEP_CAPTURE  1
+.eqv STEP_PROMOTED 2
+.eqv STEP_CHAIN    4
+
 # the board array is sized for 10x10 plus a one-cell border
 .eqv MAX_CELLS   144
 .eqv MAX_SQUARES 50

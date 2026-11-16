@@ -11,6 +11,9 @@ msg_ask_start:  .asciiz "Enter starting square: "
 msg_ask_land:   .asciiz "Enter landing square: "
 msg_invalid:    .asciiz "Not a valid move! Try again.\n"
 msg_bye:        .asciiz "Game stopped.\n"
+msg_cap_black:  .asciiz "Captured Black's piece.\n"
+msg_cap_red:    .asciiz "Captured Red's piece.\n"
+msg_chain:      .asciiz "Chaining possible.\n"
 
 move_buf:       .space 64
 
@@ -65,20 +68,46 @@ g_ask:
 
         move    $a0, $s2
         la      $a1, move_buf
-        jal     gen_simple
-        la      $t0, move_buf
-g_find:
+        jal     gen_piece_moves
+        move    $a0, $s3
+        jal     find_landing
         beqz    $v0, g_invalid
-        lw      $a0, 0($t0)
-        srl     $t1, $a0, 8
-        andi    $t1, $t1, 0xff
-        beq     $t1, $s3, g_play
-        addi    $t0, $t0, 4
-        addi    $v0, $v0, -1
-        j       g_find
+
 g_play:
+        lw      $s0, turn               # remember who moved for the message
+        move    $a0, $v0
         jal     apply_step
-        j       g_turn
+        move    $s1, $v0
+        andi    $t0, $s1, STEP_CAPTURE
+        beqz    $t0, g_played
+        la      $a0, msg_cap_red
+        beq     $s0, BLACK, g_say_cap
+        la      $a0, msg_cap_black
+g_say_cap:
+        li      $v0, SYS_PRINT_STR
+        syscall
+g_played:
+        andi    $t0, $s1, STEP_CHAIN
+        beqz    $t0, g_turn
+
+        # the piece has to keep jumping, only the landing square is asked
+        jal     display_board
+        print_str(msg_chain)
+g_chain_ask:
+        la      $a0, msg_ask_land
+        jal     ask
+        beq     $v0, P_CMD, g_command
+        move    $a0, $v1
+        jal     cell_of_sq
+        move    $s3, $v0
+        lw      $a0, chain_piece
+        la      $a1, move_buf
+        jal     gen_captures
+        move    $a0, $s3
+        jal     find_landing
+        bnez    $v0, g_play
+        print_str(msg_invalid)
+        j       g_chain_ask
 
 g_invalid:
         print_str(msg_invalid)
@@ -86,7 +115,12 @@ g_invalid:
 
 g_command:
         ori     $v1, $v1, 0x20
-        bne     $v1, 'q', g_invalid
+        beq     $v1, 'q', g_quit
+        lw      $t0, chain_piece
+        beqz    $t0, g_invalid
+        print_str(msg_invalid)
+        j       g_chain_ask
+g_quit:
         print_str(msg_bye)
 
         lw      $s3, 0($sp)
@@ -106,4 +140,24 @@ ask:
         jal     read_line
         jal     parse_line
         pop     ($ra)
+        jr      $ra
+
+# Looks through move_buf (v0 entries) for a move that lands on cell a0.
+# v0 = that move, or 0 if there is none.
+find_landing:
+        la      $t0, move_buf
+        move    $t1, $v0
+        li      $v0, 0
+fl_loop:
+        beqz    $t1, fl_done
+        lw      $t2, 0($t0)
+        srl     $t3, $t2, 8
+        andi    $t3, $t3, 0xff
+        beq     $t3, $a0, fl_hit
+        addi    $t0, $t0, 4
+        addi    $t1, $t1, -1
+        j       fl_loop
+fl_hit:
+        move    $v0, $t2
+fl_done:
         jr      $ra

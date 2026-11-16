@@ -6,7 +6,7 @@
 
 .include "include/constants.inc"
 
-.globl board, turn, count_black, count_red
+.globl board, turn, chain_piece, count_black, count_red
 .globl board_n, board_w, men_rows, num_squares, dirs
 .globl sq_to_idx, idx_to_sq
 .globl board_clear, board_reset, cell_of_sq
@@ -14,6 +14,7 @@
 .data
 board:          .space MAX_CELLS
 turn:           .word BLACK
+chain_piece:    .word 0                 # cell of the piece that must keep jumping, 0 = none
 count_black:    .word 0
 count_red:      .word 0
 
@@ -92,6 +93,7 @@ bc_next:
 
         li      $t0, BLACK
         sw      $t0, turn
+        sw      $zero, chain_piece
         sw      $zero, count_black
         sw      $zero, count_red
         jr      $ra
