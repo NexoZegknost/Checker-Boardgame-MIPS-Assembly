@@ -1,34 +1,49 @@
-# =============================================================================
-# constants.inc — Hằng số dùng chung cho mọi module
-# Dùng: .include "include/constants.inc"  (ở đầu mỗi file .asm trong src/)
-# File đuôi .inc để MARS không assemble nó như một module riêng.
-# =============================================================================
+# Shared constants and a few small macros.
+# Kept as .inc so MARS does not try to assemble it on its own.
 
-# ---------- Syscall MARS ----------
-.eqv SYS_PRINT_INT     1
-.eqv SYS_PRINT_STR     4
-.eqv SYS_READ_INT      5
-.eqv SYS_READ_STR      8
-.eqv SYS_EXIT          10
-.eqv SYS_PRINT_CHAR    11
-.eqv SYS_READ_CHAR     12
+# syscalls
+.eqv SYS_PRINT_INT   1
+.eqv SYS_PRINT_STR   4
+.eqv SYS_READ_STR    8
+.eqv SYS_EXIT        10
+.eqv SYS_PRINT_CHAR  11
 
-# ---------- Mã ô / quân (bit flags, 1 byte mỗi ô) ----------
-# bit0 = Đen, bit1 = Đỏ, bit2 = Vua, bit3 = Tường (viền mailbox)
-.eqv EMPTY             0x00
-.eqv BLACK             0x01
-.eqv RED               0x02
-.eqv KING              0x04
-.eqv WALL              0x08
-.eqv COLOR_MASK        0x03
+# what a board cell can hold (one byte per cell)
+.eqv EMPTY       0
+.eqv BLACK       1
+.eqv RED         2
+.eqv KING        4
+.eqv WALL        8
+.eqv COLOR_MASK  3
 
-.eqv B_PAWN            0x01     # BLACK
-.eqv R_PAWN            0x02     # RED
-.eqv B_KING            0x05     # BLACK | KING
-.eqv R_KING            0x06     # RED   | KING
+# the board array is sized for 10x10 plus a one-cell border
+.eqv MAX_CELLS   144
+.eqv MAX_SQUARES 50
 
-# ---------- Kích thước ----------
-.eqv MAX_N             10       # bàn lớn nhất hỗ trợ (10x10)
-.eqv MAX_W             12       # MAX_N + 2 (viền)
-.eqv MAX_CELLS         144      # MAX_W * MAX_W
-.eqv MAX_SQUARES       50       # số ô tối dùng được trên bàn 10x10
+.macro print_str (%label)
+        la      $a0, %label
+        li      $v0, SYS_PRINT_STR
+        syscall
+.end_macro
+
+.macro print_chr (%c)
+        li      $a0, %c
+        li      $v0, SYS_PRINT_CHAR
+        syscall
+.end_macro
+
+.macro print_num (%reg)
+        move    $a0, %reg
+        li      $v0, SYS_PRINT_INT
+        syscall
+.end_macro
+
+.macro push (%reg)
+        addi    $sp, $sp, -4
+        sw      %reg, 0($sp)
+.end_macro
+
+.macro pop (%reg)
+        lw      %reg, 0($sp)
+        addi    $sp, $sp, 4
+.end_macro
