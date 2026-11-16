@@ -1,0 +1,115 @@
+  r   r   r   r
+r   r   r   r
+  r   r   r   r
+0   0   0   0
+  0   0   0   0
+b   b   b   b
+  b   b   b   b
+b   b   b   b
+Black's turn.
+Enter starting square: Enter landing square: Not a valid move! Square 13 is not on a diagonal from square 21. Try again.
+Enter starting square: Enter landing square: Not a valid move! Type the number of a square. Try again.
+Enter starting square: Not a valid move! There is no square 40, squares go from 1 to 32. Try again.
+Enter starting square: Not a valid move! Square 15 is empty. Try again.
+Enter starting square: Not a valid move! The piece on square 9 belongs to Red. Try again.
+Enter starting square: Not a valid move! The piece on square 30 has no move available. Try again.
+Enter starting square: Enter landing square:   r   r   r   r
+r   r   r   r
+  r   r   r   r
+0   0   0   0
+  b   0   0   0
+0   b   b   b
+  b   b   b   b
+b   b   b   b
+Red's turn.
+Enter starting square: Enter landing square:   r   r   r   r
+r   r   r   r
+  0   r   r   r
+r   0   0   0
+  b   0   0   0
+0   b   b   b
+  b   b   b   b
+b   b   b   b
+Black's turn.
+Enter starting square: Enter landing square:   r   r   r   r
+r   r   r   r
+  0   r   r   r
+r   0   0   0
+  b   0   0   0
+b   b   b   b
+  0   b   b   b
+b   b   b   b
+Red's turn.
+Enter starting square: Enter landing square:   r   r   r   r
+r   0   r   r
+  r   r   r   r
+r   0   0   0
+  b   0   0   0
+b   b   b   b
+  0   b   b   b
+b   b   b   b
+Black's turn.
+Enter starting square: Enter landing square:   r   r   r   r
+r   0   r   r
+  r   r   r   r
+r   0   0   0
+  b   0   0   0
+b   b   b   b
+  b   b   b   b
+0   b   b   b
+Red's turn.
+Enter starting square: Enter landing square:   r   r   r   r
+r   0   r   r
+  r   r   0   r
+r   0   r   0
+  b   0   0   0
+b   b   b   b
+  b   b   b   b
+0   b   b   b
+Black's turn.
+Enter starting square: Enter landing square:   r   r   r   r
+r   0   r   r
+  r   r   0   r
+r   0   r   0
+  b   b   0   0
+b   b   0   b
+  b   b   b   b
+0   b   b   b
+Red's turn.
+Enter starting square: Enter landing square:   r   r   r   r
+r   0   r   r
+  r   r   0   r
+r   0   0   0
+  b   b   r   0
+b   b   0   b
+  b   b   b   b
+0   b   b   b
+Black's turn.
+Enter starting square: Enter landing square: Not a valid move! A man can only move forward. Try again.
+Enter starting square: Enter landing square: Not a valid move! Square 6 is too far away. Try again.
+Enter starting square: Enter landing square: Not a valid move! You cannot jump over your own piece. Try again.
+Enter starting square: Enter landing square: Not a valid move! There is no piece to jump over. Try again.
+Enter starting square: Enter landing square: Captured Red's piece.
+  r   r   r   r
+r   0   r   r
+  r   r   0   r
+r   0   b   0
+  b   b   0   0
+b   b   0   0
+  b   b   b   b
+0   b   b   b
+Chaining possible.
+Enter landing square: Not a valid move! You must keep capturing with the piece on square 15. Try again.
+Enter landing square: Unknown command.
+Enter landing square: Not a valid move! There is no square 99, squares go from 1 to 32. Try again.
+Enter landing square: Captured Red's piece.
+  r   r   r   r
+r   b   r   r
+  r   0   0   r
+r   0   0   0
+  b   b   0   0
+b   b   0   0
+  b   b   b   b
+0   b   b   b
+Red's turn.
+Enter starting square: Game stopped.

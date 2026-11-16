@@ -8,7 +8,7 @@
 msg_turn:       .asciiz "'s turn.\n"
 msg_ask_start:  .asciiz "Enter starting square: "
 msg_ask_land:   .asciiz "Enter landing square: "
-msg_invalid:    .asciiz "Not a valid move! Try again.\n"
+msg_unknown:    .asciiz "Unknown command.\n"
 msg_bye:        .asciiz "Game stopped.\n"
 msg_captured:   .asciiz "Captured "
 msg_s_piece:    .asciiz "'s piece.\n"
@@ -20,12 +20,13 @@ msg_wins:       .asciiz " wins!\n"
 .text
 
 game_run:
-        addi    $sp, $sp, -20
-        sw      $ra, 16($sp)
-        sw      $s0, 12($sp)
-        sw      $s1, 8($sp)
-        sw      $s2, 4($sp)
-        sw      $s3, 0($sp)
+        addi    $sp, $sp, -24
+        sw      $ra, 20($sp)
+        sw      $s0, 16($sp)
+        sw      $s1, 12($sp)
+        sw      $s2, 8($sp)
+        sw      $s3, 4($sp)
+        sw      $s4, 0($sp)
 
         jal     board_reset
 g_turn:
@@ -58,25 +59,31 @@ g_announce:
         print_str(msg_turn)
 
 g_ask:
-        # both squares are read before anything is checked, like in the handout
         la      $a0, msg_ask_start
         jal     ask
         beq     $v0, P_CMD, g_command
-        move    $s2, $v1
+        move    $a0, $v1
+        move    $a1, $v0
+        jal     explain_start
+        beqz    $v0, g_ask
+        move    $s2, $v0
+
         la      $a0, msg_ask_land
         jal     ask
         beq     $v0, P_CMD, g_command
         move    $s3, $v1
-
-        move    $a0, $s2
-        jal     cell_of_sq
-        move    $s2, $v0
+        move    $s4, $v0
         move    $a0, $s3
         jal     cell_of_sq
         move    $a0, $s2
         move    $a1, $v0
         jal     find_move
-        beqz    $v0, g_invalid
+        bnez    $v0, g_play
+        move    $a0, $s2
+        move    $a1, $s3
+        move    $a2, $s4
+        jal     explain_landing
+        j       g_ask
 
 g_play:
         lw      $s0, turn               # remember who moved for the message
@@ -101,23 +108,24 @@ g_chain_ask:
         la      $a0, msg_ask_land
         jal     ask
         beq     $v0, P_CMD, g_command
-        move    $a0, $v1
+        move    $s3, $v1
+        move    $s4, $v0
+        move    $a0, $s3
         jal     cell_of_sq
         lw      $a0, chain_piece
         move    $a1, $v0
         jal     find_move
         bnez    $v0, g_play
-        print_str(msg_invalid)
+        lw      $a0, chain_piece
+        move    $a1, $s3
+        move    $a2, $s4
+        jal     explain_landing
         j       g_chain_ask
-
-g_invalid:
-        print_str(msg_invalid)
-        j       g_ask
 
 g_command:
         ori     $v1, $v1, 0x20
         beq     $v1, 'q', g_quit
-        print_str(msg_invalid)
+        print_str(msg_unknown)
 g_reprompt:
         lw      $t0, chain_piece
         bnez    $t0, g_chain_ask
@@ -125,16 +133,16 @@ g_reprompt:
 g_quit:
         print_str(msg_bye)
 g_leave:
-        lw      $s3, 0($sp)
-        lw      $s2, 4($sp)
-        lw      $s1, 8($sp)
-        lw      $s0, 12($sp)
-        lw      $ra, 16($sp)
-        addi    $sp, $sp, 20
+        lw      $s4, 0($sp)
+        lw      $s3, 4($sp)
+        lw      $s2, 8($sp)
+        lw      $s1, 12($sp)
+        lw      $s0, 16($sp)
+        lw      $ra, 20($sp)
+        addi    $sp, $sp, 24
         jr      $ra
 
 # Prints the prompt in a0, reads a line and returns what parse_line says.
-# Bad input comes back as square 0, which is never valid.
 ask:
         push    ($ra)
         li      $v0, SYS_PRINT_STR

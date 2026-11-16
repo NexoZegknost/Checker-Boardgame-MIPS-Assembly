@@ -16,7 +16,8 @@ r   r   r   r
   b   b   b   b
 b   b   b   b
 Red's turn.
-Enter starting square: Enter landing square: Not a valid move! Try again.
+Enter starting square: Not a valid move! Square 21 is empty. Try again.
+Enter starting square: Not a valid move! Square 13 is empty. Try again.
 Enter starting square: Enter landing square:   r   r   r   r
 r   r   r   r
   0   r   r   r

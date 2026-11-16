@@ -89,8 +89,8 @@ b   b   0   0
   b   b   b   b
 0   b   b   b
 Chaining possible.
-Enter landing square: Not a valid move! Try again.
-Enter landing square: Not a valid move! Try again.
+Enter landing square: Not a valid move! Square 7 is already occupied. Try again.
+Enter landing square: Unknown command.
 Enter landing square: Captured Red's piece.
   r   r   r   r
 r   b   r   r
@@ -101,5 +101,5 @@ b   b   0   0
   b   b   b   b
 0   b   b   b
 Red's turn.
-Enter starting square: Enter landing square: Not a valid move! Try again.
-Enter starting square: Game stopped.
+Enter starting square: Not a valid move! The piece on square 2 has no move available. Try again.
+Enter starting square: Enter landing square: Game stopped.

@@ -9,7 +9,7 @@
 .globl board, turn, chain_piece, count_black, count_red
 .globl board_n, board_w, men_rows, num_squares, dirs
 .globl sq_to_idx, idx_to_sq
-.globl board_clear, board_reset, cell_of_sq
+.globl board_clear, board_reset, cell_of_sq, sq_of_cell
 
 .data
 board:          .space MAX_CELLS
@@ -145,4 +145,11 @@ cell_of_sq:
         add     $t0, $t0, $a0
         lbu     $v0, 0($t0)
 cs_done:
+        jr      $ra
+
+# a0 = cell index, v0 = its square number (0 for a light square)
+sq_of_cell:
+        la      $t0, idx_to_sq
+        add     $t0, $t0, $a0
+        lbu     $v0, 0($t0)
         jr      $ra
