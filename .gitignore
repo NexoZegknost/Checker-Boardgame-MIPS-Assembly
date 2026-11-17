@@ -20,3 +20,10 @@ Thumbs.db
 .vscode/
 .idea/
 tests/*.err
+scripts/fuzz/fail_*.in
+__pycache__/
+report/**/*.lof
+report/**/*.lol
+report/**/*.lot
+report/**/*.xdv
+report/missfont.log

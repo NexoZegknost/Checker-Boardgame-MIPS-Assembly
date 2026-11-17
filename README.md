@@ -102,6 +102,7 @@ src/editor.asm     xếp thế cờ
 src/ai.asm         máy chơi quân Đỏ
 src/include/       hằng số và macro dùng chung
 tests/             test hồi quy (.in / .out)
+scripts/           chạy test, đối chiếu với mô hình Python
 docs/              thiết kế, kế hoạch
 report/            báo cáo
 ```
@@ -115,5 +116,7 @@ Chi tiết thiết kế ở [`docs/design.md`](docs/design.md), kế hoạch the
 ./scripts/run_tests.sh q7_draw_offer   # chạy một test
 UPDATE=1 ./scripts/run_tests.sh     # ghi lại kết quả mong đợi sau khi đổi giao diện
 ```
+
+Ngoài test viết tay, `scripts/fuzz/` có một mô hình luật chơi viết lại bằng Python (`ref.py`). `fuzz.py` cho mô hình chơi các ván ngẫu nhiên rồi so từng bàn cờ với những gì chương trình MIPS in ra; `fuzz_ai.py` kiểm tra mọi nước máy đi có hợp lệ không.
 
 Mỗi test là một cặp `tests/<tên>.in` (những gì người chơi gõ) và `tests/<tên>.out` (toàn bộ màn hình mong đợi). Tên test bắt đầu bằng mã yêu cầu trong roadmap (`m3_...`, `q5_...`, `a4_...`). GitHub Actions chạy bộ test này ở mỗi lần push.
