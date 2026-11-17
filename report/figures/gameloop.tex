@@ -1,0 +1,28 @@
+% Vong lap mot van dau
+\begin{tikzpicture}[
+    box/.style={draw,rounded corners=2pt,align=center,font=\small,minimum height=0.75cm,text width=5.2cm},
+    dec/.style={draw,diamond,aspect=2.6,align=center,font=\small,inner sep=1pt,text width=3.2cm},
+    ->,>={Stealth},node distance=0.55cm]
+  \node[box] (mark) {Lưu thế cờ đầu lượt\\(\texttt{undo\_mark})};
+  \node[box,below=of mark] (show) {In bàn cờ, sinh nước hợp lệ\\(\texttt{gen\_legal})};
+  \node[dec,below=of show] (any) {Còn nước đi?};
+  \node[box,below=of any] (ask) {Hỏi nước đi (người) hoặc\\tìm nước đi (máy)};
+  \node[dec,below=of ask] (ok) {Có trong\\\texttt{legal\_buf}?};
+  \node[box,below=of ok] (apply) {\texttt{apply\_step}, ghi biên bản};
+  \node[dec,below=of apply] (chain) {Còn ăn tiếp\\được?};
+  \node[box,right=2.3cm of any,text width=3cm] (over) {Kết thúc ván};
+  \node[box,right=2.3cm of ok,text width=3cm] (why) {Giải thích lỗi\\(\texttt{explain})};
+  \node[box,left=1.6cm of chain,text width=2.6cm] (again) {In bàn, hỏi ô đáp tiếp theo};
+
+  \draw (mark) -- (show); \draw (show) -- (any);
+  \draw (any) -- node[right,font=\scriptsize]{có} (ask);
+  \draw (any) -- node[above,font=\scriptsize]{không} (over);
+  \draw (ask) -- (ok);
+  \draw (ok) -- node[right,font=\scriptsize]{có} (apply);
+  \draw (ok) -- node[above,font=\scriptsize]{không} (why);
+  \draw (why.north) |- (ask.east);
+  \draw (apply) -- (chain);
+  \draw (chain) -- node[above,font=\scriptsize]{có} (again);
+  \draw (again.north) |- (ok.west);
+  \draw (chain.south) -- ++(0,-0.5) node[right,font=\scriptsize,yshift=3pt]{không: đổi lượt} -| ([xshift=-4.7cm]mark.west) -- (mark.west);
+\end{tikzpicture}

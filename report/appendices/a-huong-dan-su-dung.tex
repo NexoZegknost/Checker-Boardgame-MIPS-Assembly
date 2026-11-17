@@ -1,0 +1,83 @@
+\chapter{Hướng dẫn sử dụng}
+
+\section{Chạy chương trình}
+
+\begin{enumerate}
+\item Mở MARS 4.5. Trong menu \emph{Settings} bật \emph{Assemble all files in directory} và \emph{Initialize Program Counter to global 'main' if defined}.
+\item Mở file \code{src/main.asm}, chọn \emph{Run $\to$ Assemble} rồi \emph{Run $\to$ Go}.
+\item Nhập liệu trong khung \emph{Run I/O}.
+\end{enumerate}
+
+Chạy bằng dòng lệnh: \code{cd src \&\& java -jar Mars.jar nc sm p main.asm}.
+
+\section{Menu chính}
+
+\begin{lstlisting}[style=screen]
+ 1) New game
+ 2) Settings
+ 3) Set up a position
+ 4) How to play
+ 0) Quit
+\end{lstlisting}
+
+Trong \emph{Settings}, gõ số của một dòng để chuyển tùy chọn đó sang giá trị kế tiếp:
+
+\begin{table}[ht]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}lL@{}}
+\toprule
+Dòng & Các giá trị \\
+\midrule
+Board style & kiểu đề bài; có khung và số ô \\
+Point of view & Đen luôn ở dưới; xoay bàn theo người đi; xoay cả bàn lẫn số ô \\
+Move entry & gõ ô xuất phát và ô đáp; chọn từ danh sách \\
+Rules & assignment, English, International, Brazilian, Russian, custom \\
+Red is played & người thứ hai; máy mức dễ, trung bình, khó \\
+Custom rules... & mở trang bật tắt từng luật \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Lệnh trong ván}
+
+Ở lời nhắc nhập ô, có thể gõ một trong các lệnh sau thay cho số ô:
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Lệnh & Tác dụng \\
+\midrule
+\code{h} & xem danh sách lệnh \\
+\code{l} & xem các nước đã đi \\
+\code{u} & đi lại nước vừa rồi \\
+\code{d} & cầu hòa, hoặc nhận lời cầu hòa của đối thủ \\
+\code{r} & chơi lại từ đầu \\
+\code{q} & bỏ ván, về menu \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Xếp thế cờ}
+
+Trong \emph{Set up a position}, số ô luôn theo ký hiệu chuẩn (Đen ở dưới):
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Lệnh & Tác dụng \\
+\midrule
+\code{b 14}, \code{r 9} & đặt quân thường Đen, Đỏ \\
+\code{B 14}, \code{R 9} & đặt vua Đen, Đỏ \\
+\code{x 14} & bỏ quân ở ô 14 \\
+\code{c} & xóa cả bàn \\
+\code{s} & xếp thế ban đầu \\
+\code{t} & đổi bên đi trước \\
+\code{p} & bắt đầu chơi từ thế này \\
+\code{q} & về menu \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Ví dụ, để dựng lại hình~8 của đề: \code{r 15}, \code{b 19}, \code{b 27}, \code{b 26}, \code{b 17}, \code{t}, \code{p}; sau đó Đỏ đi \code{15}, \code{24}, rồi \code{31}, \code{22}, \code{13}.

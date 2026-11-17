@@ -1,0 +1,85 @@
+\chapter{Mở rộng: luật nâng cao}
+
+\section{Bộ luật là một tập bit}
+
+Mọi luật tùy chọn được gom vào một word \code{rule\_flags}, mỗi bit một luật (bảng~\ref{tab:rules}). Tất cả bằng~0 là luật của đề. Phần sinh nước đi và phần thực hiện nước đi đọc các bit này tại đúng chỗ luật có tác dụng, nên các luật kết hợp được với nhau tùy ý. Kích thước bàn và số hàng quân ban đầu cũng thuộc bộ luật.
+
+\begin{table}[ht]
+\centering\small
+\caption{Các luật tùy chọn}\label{tab:rules}
+\begin{tabularx}{\textwidth}{@{}lL@{}}
+\toprule
+Bit & Ý nghĩa \\
+\midrule
+\code{RULE\_MUST\_CAPTURE} & Có nước ăn thì phải ăn \\
+\code{RULE\_LONGEST} & Phải chọn chuỗi ăn được nhiều quân nhất \\
+\code{RULE\_FLYING} & Vua đi và ăn xa tùy ý theo đường chéo \\
+\code{RULE\_JUMP\_BACK} & Quân thường được ăn lùi \\
+\code{RULE\_MOVE\_BACK} & Quân thường được đi lùi \\
+\code{RULE\_CROWN\_LATE} & Chỉ phong vua nếu nước đi kết thúc ở hàng cuối \\
+\code{RULE\_REMOVE\_LATE} & Quân bị ăn chỉ được nhấc khỏi bàn khi hết lượt \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Một bộ luật có sẵn là một dòng giá trị trong bảng \code{presets} của \code{settings.asm} (bảng~\ref{tab:presets}). Menu cài đặt cũng chạy theo bảng: mỗi dòng gồm nhãn, địa chỉ biến, số giá trị và bảng tên các giá trị, nên trang cài đặt chung và trang luật tùy chỉnh dùng chung một hàm \code{run\_menu}.
+
+\begin{table}[ht]
+\centering\small
+\caption{Các bộ luật có sẵn}\label{tab:presets}
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+Bộ luật & Bàn & Buộc ăn & Nhiều nhất & Vua bay & Ăn lùi & Phong vua & Nhấc quân \\
+\midrule
+assignment & 8$\times$8 & -- & -- & -- & -- & ngay & ngay \\
+English & 8$\times$8 & có & -- & -- & -- & ngay & ngay \\
+International & 10$\times$10 & có & có & có & có & cuối nước & cuối lượt \\
+Brazilian & 8$\times$8 & có & có & có & có & cuối nước & cuối lượt \\
+Russian & 8$\times$8 & có & -- & có & có & ngay & cuối lượt \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Bắt buộc ăn quân (A1)}
+
+\textbf{Lý do.} Đây là luật chính thức của checkers mà bản tối thiểu được phép bỏ qua.
+
+\textbf{Cách làm.} \code{gen\_legal} sinh nước ăn trước. Nếu có ít nhất một nước ăn và bit \code{RULE\_MUST\_CAPTURE} bật, hàm dừng lại, không sinh nước đi thường. Vì mọi phần khác đều tra \code{legal\_buf}, luật có hiệu lực ngay ở cả hai kiểu nhập và ở máy. Thông báo lỗi cũng nói rõ: quân được chọn không ăn được trong khi bắt buộc phải ăn.
+
+\section{Bàn 10$\times$10 (A2)}
+
+\textbf{Cách làm.} Do bàn cờ dùng mảng có viền với $n$ là biến, đổi kích thước chỉ là đặt \code{board\_n = 10} và số hàng quân bằng 3 (15 quân) hoặc 4 (20 quân). \code{board\_clear} tính lại $w$, bốn hướng và hai bảng tra cho 50 ô; \code{board\_reset} xếp quân theo số hàng. Không có đoạn mã nào viết riêng cho bàn 10$\times$10.
+
+\section{Vua bay và quân thường ăn lùi (A3)}\label{sec:ghost}
+
+\textbf{Lý do.} Đây là điểm khác biệt chính của các biến thể International, Brazilian và Russian so với luật Anh.
+
+\textbf{Cách làm.} Trong \code{gen\_simple}, sau khi ghi một ô đáp, nếu quân là vua và \code{RULE\_FLYING} bật thì cộng tiếp hướng đi và lặp lại cho tới khi gặp ô khác~0. Trong \code{gen\_captures} (đoạn mã~\ref{lst:gencap}), vua bay trượt qua các ô trống để tìm quân bị ăn (nhãn \code{gc\_approach}), rồi mỗi ô trống phía sau quân đó là một ô đáp (nhãn \code{gc\_land}). Với quân thường, phép lọc hướng được bỏ qua khi \code{RULE\_JUMP\_BACK} bật.
+
+Khi vua bay ăn chuỗi, luật yêu cầu quân bị ăn nằm lại trên bàn tới hết lượt và không được nhảy qua lần hai. Chương trình đánh dấu quân bị ăn bằng bit \code{GHOST} thay vì xóa (đoạn mã~\ref{lst:capture}); ô có \code{GHOST} khác~0 nên vẫn chắn đường, và \code{gen\_captures} bỏ qua nó khi tìm quân để ăn. Cuối lượt, \code{apply\_step} quét bàn và xóa các ô có bit này. Trên màn hình, quân đã bị ăn hiện là \code{x}.
+
+\asmfile[label=lst:capture]{Xử lý quân bị ăn trong \code{apply\_step}}{capture_step.asm}
+
+\section{Luật ăn nhiều quân nhất (A4)}
+
+\textbf{Lý do.} Luật này làm cho việc kiểm tra hợp lệ không còn là chuyện của một bước: phải nhìn trước cả chuỗi. Đây là phần khó nhất về thuật toán trong bài.
+
+\textbf{Cách làm.} \code{filter\_jumps} chấm điểm từng nước ăn bằng \code{chain\_len} (đoạn mã~\ref{lst:chainlen}): cất thế cờ, thực hiện nước ăn trên chính bàn cờ thật, gọi đệ quy cho từng nước ăn tiếp theo, lấy giá trị lớn nhất, rồi trả thế cờ về. Chỉ những nước đạt điểm cao nhất được giữ lại trong \code{legal\_buf}. Vì bộ lọc chạy ở mỗi bước của chuỗi, người chơi bị giữ trên chuỗi dài nhất từ đầu tới cuối.
+
+Hàm đệ quy cần một mảng riêng cho các nước ăn tiếp theo ở mỗi tầng. Mảng này được cấp ngay trong khung stack của hàm: mỗi lần gọi trừ \code{\$sp} đi 176 byte, gồm 16 byte cho bốn thanh ghi cần giữ và 160 byte cho tối đa 40 nước.
+
+\asmfile[label=lst:chainlen]{Độ dài chuỗi ăn dài nhất bắt đầu bằng một nước}{chain_len.asm}
+
+Với biến thể Russian không có luật này, nhưng vua bay phải đáp xuống ô mà từ đó còn ăn tiếp được, nếu có ô như vậy. \code{filter\_jumps} xử lý bằng cách thử từng nước ăn xem chuỗi có tiếp tục không, rồi bỏ những ô đáp ``cụt'' khi cùng quân bị ăn đó có ô đáp tốt hơn.
+
+\section{Chơi với máy (A4)}
+
+\textbf{Lý do.} Có máy thì một người cũng chơi và thử được chương trình; về kỹ thuật, đây là dịp dùng đệ quy và quản lý stack ở mức phức tạp hơn.
+
+\textbf{Cách làm.} Máy cầm quân Đỏ, có ba mức. Mức dễ chọn ngẫu nhiên một bước trong \code{legal\_buf} bằng syscall 42. Hai mức còn lại dùng negamax có cắt tỉa alpha-beta, nhìn trước 2 hoặc 4 lượt. Hàm \code{search} (đoạn mã~\ref{lst:search}) thử từng nước trên bàn cờ thật bằng \code{snap\_push}, \code{apply\_step}, \code{snap\_pop}, nên nó tuân theo mọi bộ luật mà không cần mã riêng. Một chuỗi ăn được coi là một lượt: nếu sau một bước lượt chưa đổi thì lời gọi đệ quy giữ nguyên độ sâu và cửa sổ alpha-beta, không đổi dấu.
+
+Danh sách nước đi là biến toàn cục và sẽ bị ghi đè khi đệ quy, nên mỗi tầng chép danh sách của mình lên stack. Số nước không biết trước, vì vậy hàm trừ \code{\$sp} một lượng tính lúc chạy và dùng \code{\$fp} để nhớ đáy khung, trả lại stack bằng \code{move \$sp, \$fp}.
+
+\asmfile[label=lst:search]{Vòng lặp chính của hàm tìm kiếm}{search_loop.asm}
+
+Hàm lượng giá đếm quân: quân thường 100 điểm, vua 180 (300 nếu là vua bay), cộng 3 điểm cho mỗi hàng quân thường đã tiến. Khi người chơi cầu hòa, máy chỉ đồng ý nếu lượng giá cho thấy nó đang kém.

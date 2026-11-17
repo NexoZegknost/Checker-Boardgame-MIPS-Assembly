@@ -1,0 +1,28 @@
+\chapter{Kết luận}
+
+\section{Kết quả}
+
+Chương trình chơi được trọn vẹn một ván checkers theo đúng luật và định dạng của đề, và có thêm toàn bộ các phần mở rộng đề gợi ý: bàn cờ có khung, xoay bàn, hai kiểu nhập, thông báo lỗi chi tiết, cầu hòa, chơi lại, đi lại, biên bản, xếp thế cờ, bắt buộc ăn, bàn 10$\times$10, bốn biến thể luật và máy chơi cùng.
+
+Ba lựa chọn thiết kế quyết định phần lớn độ gọn của mã:
+\begin{itemize}
+\item Mảng bàn cờ có viền, giúp sinh nước đi không cần kiểm tra biên và dùng chung cho hai kích thước bàn.
+\item Một danh sách nước hợp lệ duy nhất (\code{legal\_buf}) làm căn cứ cho kiểm tra đầu vào, liệt kê nước đi, phát hiện hết nước và máy.
+\item Thế cờ là một khối nhớ liền nhau, nên đi lại, chơi lại và đi thử đều chỉ là chép khối.
+\end{itemize}
+
+Về hợp ngữ MIPS, bài làm dùng tới: quy ước gọi hàm và khung stack, đệ quy có biến cục bộ trên stack (\code{chain\_len}), cấp phát stack theo kích thước tính lúc chạy với \code{\$fp} (\code{search}), bảng tra và bảng con trỏ chuỗi, thao tác bit để mã hóa dữ liệu, căn chỉnh bộ nhớ, và chương trình nhiều file với \code{.globl}, \code{.include}, \code{.eqv} và macro.
+
+\section{Hạn chế}
+
+\begin{itemize}
+\item Máy chỉ cầm quân Đỏ. Ở mức khó trên bàn 10$\times$10 với luật ăn nhiều quân nhất, mỗi nước mất khá lâu trong giao diện MARS.
+\item Hàm lượng giá chỉ đếm quân và độ tiến của quân thường, chưa xét thế trận.
+\item Bên Đen luôn đi trước ở mọi biến thể, trong khi luật International quy định bên quân sáng đi trước.
+\item Ngoài luật 40 nước, chương trình chưa nhận biết hòa do lặp lại thế cờ.
+\item Biên bản giữ tối đa 1\,024 bước và đi lại giữ tối đa 200 lượt gần nhất.
+\end{itemize}
+
+\section{Hướng phát triển}
+
+Có thể cho người chơi chọn màu khi đấu với máy, lưu biên bản ra file bằng các syscall đọc ghi file của MARS để chơi tiếp sau, và vẽ bàn cờ bằng công cụ Bitmap Display thay cho ký tự.

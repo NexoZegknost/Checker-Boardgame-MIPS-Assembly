@@ -1,0 +1,35 @@
+\chapter{Kiểm thử}
+
+\section{Test hồi quy}
+
+MARS chạy được bằng dòng lệnh, nên mỗi test là một cặp file: \code{tests/<tên>.in} chứa những gì người chơi gõ, \code{tests/<tên>.out} chứa toàn bộ màn hình mong đợi. Script \code{scripts/run\_tests.sh} đưa từng file \code{.in} vào chương trình và so kết quả với file \code{.out} bằng \code{diff}. Bộ test hiện có 22 test (phụ lục~\ref{app:tests}), tên test mang mã yêu cầu tương ứng trong bảng~\ref{tab:yeu-cau}. GitHub Actions chạy lại toàn bộ ở mỗi lần đẩy mã lên.
+
+Các ví dụ trong đề đều có test riêng: nước đi \code{21-17} và nước sai \code{21-13} (mục~2.2 của đề), chuỗi ăn \code{9x18} rồi ăn tiếp, và chuỗi \code{15x24 24x31 31x22 22x13} có phong vua giữa chừng (hình~8 của đề). Hai test sau dùng trình xếp thế cờ để dựng đúng thế cờ trong đề.
+
+\section{Đối chiếu với mô hình tham chiếu}
+
+Test viết tay chỉ phủ được những tình huống người viết nghĩ tới. Để kiểm tra rộng hơn, luật chơi được viết lại một lần nữa bằng Python (\code{scripts/fuzz/ref.py}), độc lập với mã hợp ngữ. Script \code{fuzz.py} cho mô hình này chơi một ván ngẫu nhiên, thỉnh thoảng chen vào nước đi sai, đưa đúng chuỗi phím đó cho chương trình MIPS, rồi so \emph{từng bàn cờ} chương trình in ra với bàn cờ của mô hình. Nếu chương trình nhận một nước sai, từ chối một nước đúng, hay ăn quân, phong vua khác mô hình, hai dãy bàn cờ sẽ lệch nhau.
+
+Cách này được chạy cho luật của đề, bốn bộ luật có sẵn và một số tổ hợp luật tùy chỉnh, ở cả hai kiểu nhập và cả ba kiểu góc nhìn, tổng cộng vài trăm ván dài tới 260 nước. Script \code{fuzz\_ai.py} làm tương tự với máy: một người chơi ngẫu nhiên đấu với máy ở cả ba mức, và mọi nước máy đi được kiểm tra có nằm trong danh sách hợp lệ của mô hình hay không.
+
+Một lỗi đáng nhớ được phát hiện ở giai đoạn này: sau khi thêm vài chuỗi thông báo, chương trình dừng với lỗi \emph{store address not aligned on word boundary}. Vùng đệm nước đi khai báo bằng \code{.space} ngay sau các chuỗi \code{.asciiz}, nên địa chỉ của nó không còn chia hết cho~4; trước đó nó chỉ tình cờ đúng. Từ đó mọi vùng nhớ ghi theo word đều có \code{.align 2} phía trước.
+
+\section{Số lệnh thực thi}
+
+Bảng~\ref{tab:ic} đo bằng tùy chọn \code{ic} của MARS khi chạy dòng lệnh. Một lượt của người chơi tốn khoảng sáu nghìn lệnh, phần lớn là in bàn cờ. Máy ở mức khó cần gần một triệu lệnh cho một nước ở đầu ván, nên trong giao diện MARS sẽ phải chờ vài giây.
+
+\begin{table}[ht]
+\centering\small
+\caption{Số lệnh MIPS thực thi}\label{tab:ic}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Việc & Số lệnh (xấp xỉ) \\
+\midrule
+Khởi động, in menu và bàn cờ đầu tiên & 9\,000 \\
+Một lượt của người chơi & 6\,000 \\
+Một nước của máy, mức trung bình & 96\,000 \\
+Một nước của máy, mức khó & 950\,000 \\
+Cả một ván 43 nước (test \code{m4\_full\_game}) & 256\,000 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,73 @@
+\chapter{Phần bắt buộc}
+
+\section{Hiển thị bàn cờ}
+
+Hàm \code{display\_plain} in bàn đúng theo mẫu của đề: ô sáng là khoảng trắng, ô tối trống là \code{0}, quân thường là \code{r} và \code{b}, vua là \code{R} và \code{B}. Ký tự của một ô lấy từ một bảng 8 ký tự theo ba bit thấp của ô. Bàn được in lại ở đầu mỗi lượt và sau mỗi bước của một chuỗi ăn.
+
+\begin{lstlisting}[style=screen,caption={Bàn cờ khi bắt đầu và lời nhắc nhập nước đi}]
+  r   r   r   r
+r   r   r   r
+  r   r   r   r
+0   0   0   0
+  0   0   0   0
+b   b   b   b
+  b   b   b   b
+b   b   b   b
+Black's turn.
+Enter starting square: 21
+Enter landing square: 17
+\end{lstlisting}
+
+\section{Nhập liệu}
+
+Syscall đọc số nguyên (mã 5) của MARS làm chương trình dừng với lỗi nếu người dùng gõ một ký tự không phải số. Vì vậy chương trình đọc cả dòng bằng syscall 8 rồi tự phân tích trong \code{parse\_line}. Kết quả là một trong ba loại: một số, một lệnh (chữ cái đầu của từ, kèm một số theo sau nếu có), hoặc không hợp lệ. Nhờ đó người chơi gõ nhầm chữ thì chỉ nhận thông báo lỗi và được hỏi lại, đồng thời cùng một lời nhắc nhận được cả số ô lẫn các lệnh như \code{u}, \code{d}, \code{q}.
+
+\section{Sinh nước đi}
+
+\code{gen\_simple} và \code{gen\_captures} sinh nước đi thường và nước ăn của một quân. Cả hai duyệt bốn hướng trong bảng \code{dirs}; với quân thường, hướng được chấp nhận khi là hướng tiến của màu quân đó. Điều kiện ăn chỉ gồm hai lần đọc mảng: ô kề phải chứa quân đối phương, ô kế tiếp phải bằng~0. Đoạn mã~\ref{lst:gencap} là bản đầy đủ, gồm cả phần cho vua bay sẽ nói ở chương~5.
+
+\asmfile[label=lst:gencap]{Sinh nước ăn của một quân}{gen_captures.asm}
+
+\code{gen\_legal} gọi hai hàm trên cho mọi quân của bên đang đi và ghi kết quả vào \code{legal\_buf}, nước ăn đứng trước. Nếu đang trong một chuỗi ăn thì danh sách chỉ gồm các nước ăn của quân đang ăn. Nước người chơi gõ được coi là hợp lệ khi và chỉ khi nó có trong danh sách này.
+
+\section{Thực hiện một bước}
+
+\code{apply\_step} nhận một nước đã gói, dời quân, xóa quân bị ăn và giảm số quân của bên bị ăn, phong vua nếu quân thường tới hàng cuối, rồi quyết định lượt đi:
+
+\begin{itemize}
+\item Nếu bước vừa rồi là nước ăn và quân đó còn ăn tiếp được (\code{gen\_captures} trả về khác~0), lượt giữ nguyên và \code{chain\_piece} ghi lại ô của quân đó.
+\item Ngược lại \code{chain\_piece} về~0 và lượt chuyển cho bên kia.
+\end{itemize}
+
+Việc phong vua được làm \emph{trước} khi kiểm tra ăn tiếp. Nhờ thứ tự này, quân vừa được phong trong lúc ăn sẽ ăn tiếp như một vua, tức ăn lùi được, đúng như hình~8 của đề. Hàm trả về ba bit báo cho vòng lặp biết đã có ăn quân, có phong vua, và còn chuỗi hay không để in thông báo tương ứng.
+
+\section{Vòng lặp ván đấu}
+
+Hình~\ref{fig:loop} là vòng lặp trong \code{game\_run}. Khi chuỗi ăn còn mở, chương trình in bàn, in \code{Chaining possible.} và chỉ hỏi ô đáp; mọi nước không phải là nước ăn của đúng quân đó đều bị từ chối, nên người chơi không bỏ dở chuỗi được.
+
+\begin{figure}[ht]
+\centering
+\input{figures/gameloop}
+\caption{Vòng lặp một ván đấu}\label{fig:loop}
+\end{figure}
+
+\begin{lstlisting}[style=screen,caption={Ví dụ ăn chuỗi của đề: Đỏ đi 9x18 rồi phải ăn tiếp}]
+Red's turn.
+Enter starting square: 9
+Enter landing square: 18
+Captured Black's piece.
+  0   0   0   0
+0   0   0   0
+  0   0   0   0
+0   0   B   0
+  0   r   0   0
+0   B   B   0
+  0   0   0   0
+0   0   0   0
+Chaining possible.
+Enter landing square:
+\end{lstlisting}
+
+\section{Kết thúc ván}
+
+Đầu mỗi lượt, nếu \code{gen\_legal} trả về 0 thì bên đang đi thua. Chương trình in lý do (hết quân, hoặc còn quân nhưng không đi được) rồi in tên người thắng. Trường hợp hết quân là yêu cầu bắt buộc; trường hợp bị chặn là phần mở rộng Q6, nhưng cả hai dùng chung một phép kiểm tra.

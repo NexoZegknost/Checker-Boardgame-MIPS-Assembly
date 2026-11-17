@@ -1,0 +1,30 @@
+% Quan he goi giua cac file ma nguon
+\begin{tikzpicture}[
+    mod/.style={draw,rounded corners=2pt,minimum width=2.25cm,minimum height=0.7cm,font=\ttfamily\small},
+    ->,>={Stealth},node distance=0.7cm and 0.35cm]
+  \node[mod] (main) {main};
+  \node[mod,below=of main] (game) {game};
+  \node[mod,left=1.6cm of game] (settings) {settings};
+  \node[mod,right=1.6cm of game] (editor) {editor};
+
+  \node[mod,below=1.1cm of game,xshift=-5.2cm] (input) {input};
+  \node[mod,right=of input] (picker) {picker};
+  \node[mod,right=of picker] (explain) {explain};
+  \node[mod,right=of explain] (history) {history};
+  \node[mod,right=of history] (ai) {ai};
+
+  \node[mod,below=1.1cm of explain,xshift=-1.3cm] (movegen) {movegen};
+  \node[mod,right=1.2cm of movegen] (rules) {rules};
+  \node[mod,below=0.9cm of movegen,xshift=1.75cm] (board) {board};
+  \node[mod,left=2.2cm of board] (display) {display};
+
+  \draw (main) -- (game); \draw (main) -- (settings); \draw (main) -- (editor);
+  \draw (editor) -- (game);
+  \foreach \m in {input,picker,explain,history,ai} \draw (game) -- (\m.north);
+  \draw (picker) -- (movegen); \draw (explain) -- (movegen); \draw (ai) -- (rules);
+  \draw (ai.south) -- (movegen.north east);
+  \draw[<->] (movegen) -- (rules);
+  \draw (movegen) -- (board); \draw (rules) -- (board); \draw (history.south) -- (board.north east);
+  \draw (game.south west) to[bend right=55] (display.north);
+  \draw (display) -- (board);
+\end{tikzpicture}

@@ -1,0 +1,30 @@
+% Ban 8x8 nam trong mang 10x10 co vien WALL
+\begin{tikzpicture}[x=0.72cm,y=0.72cm]
+  \foreach \r in {0,...,9} {
+    \foreach \c in {0,...,9} {
+      \pgfmathtruncatemacro{\idx}{\r*10+\c}
+      \pgfmathtruncatemacro{\edge}{(\r==0 || \r==9 || \c==0 || \c==9) ? 1 : 0}
+      \pgfmathtruncatemacro{\dark}{mod(\r+\c,2)}
+      \ifnum\edge=1
+        \fill[black!45] (\c,-\r) rectangle ++(1,-1);
+      \else
+        \ifnum\dark=1
+          \fill[black!14] (\c,-\r) rectangle ++(1,-1);
+          \pgfmathtruncatemacro{\sq}{(\r-1)*4+int((\c-1)/2)+1}
+          \node[font=\bfseries\footnotesize] at (\c+0.5,-\r-0.42) {\sq};
+        \fi
+      \fi
+      \draw[black!60] (\c,-\r) rectangle ++(1,-1);
+      \node[font=\tiny,anchor=south east,inner sep=1pt,black!70] at (\c+1,-\r-1) {\idx};
+    }
+  }
+  \fill[black!45] (10.5,-0.75) rectangle ++(0.5,0.5);
+  \node[anchor=west,font=\small] at (11.1,-0.5) {ô viền (\texttt{WALL})};
+  \node[anchor=west,font=\small] at (10.4,-1.5) {số đậm: số ô theo ký hiệu};
+  \node[anchor=west,font=\small] at (10.4,-2.5) {số nhỏ: chỉ số trong mảng};
+  \draw[-{Stealth},thick] (12.0,-5.5) -- ++(-0.9,0.9) node[above,font=\scriptsize] {$-11$};
+  \draw[-{Stealth},thick] (13.1,-5.5) -- ++(0.9,0.9) node[above,font=\scriptsize] {$-9$};
+  \draw[-{Stealth},thick] (12.0,-6.3) -- ++(-0.9,-0.9) node[below,font=\scriptsize] {$+9$};
+  \draw[-{Stealth},thick] (13.1,-6.3) -- ++(0.9,-0.9) node[below,font=\scriptsize] {$+11$};
+  \node[font=\small] at (12.55,-8.3) {bốn hướng chéo};
+\end{tikzpicture}

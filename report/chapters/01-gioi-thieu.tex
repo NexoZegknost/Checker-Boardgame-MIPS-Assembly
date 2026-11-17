@@ -1,0 +1,62 @@
+\chapter{Giới thiệu}
+
+\section{Bài toán}
+
+Bài tập lớn yêu cầu hiện thực trò chơi checkers (cờ đam) kiểu Anh cho hai người chơi bằng hợp ngữ MIPS, chạy trên trình mô phỏng MARS và giao tiếp qua cửa sổ Run~I/O. Bàn cờ 8$\times$8, mỗi bên 12 quân đặt trên các ô tối; bên Đen đi trước. Quân thường đi chéo một ô về phía trước, ăn quân bằng cách nhảy qua quân đối phương đứng kề và đáp xuống ô trống ngay sau nó. Quân tới hàng cuối được phong vua, đi và ăn được cả hai chiều. Bên nào không còn nước đi hợp lệ thì thua.
+
+Đề chia yêu cầu làm hai mức. Mức tối thiểu gồm in bàn cờ sau mỗi lượt, nhập nước đi bằng số ô, kiểm tra tính hợp lệ, ăn quân và ăn chuỗi bắt buộc, phong vua, thông báo người thắng. Mức mở rộng gồm các tiện ích cho người chơi và các bộ luật khó hơn.
+
+\section{Phạm vi đã thực hiện}
+
+Chương trình thực hiện đầy đủ mức tối thiểu và tất cả các gợi ý mở rộng trong đề. Chế độ mặc định giữ đúng luật và đúng định dạng nhập xuất của đề; mỗi phần mở rộng là một tùy chọn trong menu \emph{Settings} hoặc một lệnh gõ trong ván. Bảng~\ref{tab:yeu-cau} liệt kê từng yêu cầu, nơi hiện thực và test kiểm chứng tương ứng.
+
+\begin{longtable}{@{}p{0.9cm}p{6.6cm}p{3.2cm}p{4cm}@{}}
+\caption{Yêu cầu của đề và phần hiện thực tương ứng}\label{tab:yeu-cau}\\
+\toprule
+Mã & Yêu cầu & File chính & Test \\
+\midrule
+\endfirsthead
+\toprule
+Mã & Yêu cầu & File chính & Test \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{4}{@{}l}{\emph{Phần bắt buộc}}\\
+R1 & Bàn 8$\times$8, 12 quân mỗi bên, Đen đi trước & \code{board.asm} & \code{m1\_initial\_board} \\
+R2 & Quân thường đi chéo một ô về phía trước & \code{movegen.asm} & \code{m2\_handout\_moves} \\
+R3 & Ăn quân bằng cách nhảy qua & \code{movegen.asm}, \code{rules.asm} & \code{m3\_chain\_capture} \\
+R4 & Ăn chuỗi bắt buộc & \code{rules.asm}, \code{game.asm} & \code{m3\_handout\_chain} \\
+R5 & Phong vua, kể cả giữa chuỗi ăn & \code{rules.asm} & \code{m3\_handout\_figure8} \\
+R6 & Thông báo người thắng khi hết quân & \code{game.asm} & \code{m4\_full\_game} \\
+R7 & Ký hiệu ô 1--32 & \code{board.asm} & \code{m2\_handout\_moves} \\
+R8 & In bàn cờ mỗi lượt & \code{display.asm} & \code{m1\_initial\_board} \\
+R9 & Hỏi ô xuất phát và ô đáp & \code{game.asm} & \code{m2\_handout\_moves} \\
+R10 & Kiểm tra hợp lệ, sai thì nhập lại & \code{game.asm}, \code{explain.asm} & \code{m2\_bad\_input} \\
+R11 & Thông báo khi ăn quân và khi ăn chuỗi & \code{game.asm} & \code{m3\_handout\_chain} \\
+\midrule
+\multicolumn{4}{@{}l}{\emph{Mở rộng: tiện ích}}\\
+Q1 & Bàn cờ đẹp hơn (có khung, số ô) & \code{display.asm} & \code{q1\_framed\_board} \\
+Q2 & Xoay bàn theo người đang đi & \code{display.asm} & \code{q2\_q3\_point\_of\_view} \\
+Q3 & Ký hiệu ô theo người đang đi & \code{board.asm} & \code{q2\_q3\_point\_of\_view} \\
+Q4 & Chọn quân rồi chọn nước từ danh sách & \code{picker.asm} & \code{q4\_pick\_from\_list} \\
+Q5 & Thông báo lỗi chi tiết & \code{explain.asm} & \code{q5\_error\_messages} \\
+Q6 & Thua khi bị chặn hết nước & \code{game.asm} & \code{q6\_blocked} \\
+Q7 & Cầu hòa & \code{game.asm} & \code{q7\_draw\_offer} \\
+Q8 & Chơi lại không cần thoát & \code{main.asm}, \code{game.asm} & \code{q8\_menu\_restart} \\
+Q9 & Tự đề xuất: biên bản, đi lại, hòa 40 nước, trợ giúp, xếp thế cờ & \code{history.asm}, \code{editor.asm} & \code{q9\_log\_undo\_help}, \code{q9\_forty\_move\_draw} \\
+\midrule
+\multicolumn{4}{@{}l}{\emph{Mở rộng: luật nâng cao}}\\
+A1 & Bắt buộc ăn quân & \code{movegen.asm} & \code{a1\_mandatory\_capture} \\
+A2 & Bàn 10$\times$10, 15 hoặc 20 quân & \code{board.asm}, \code{settings.asm} & \code{a2\_board\_10x10} \\
+A3 & Biến thể: vua bay, quân thường ăn lùi & \code{movegen.asm}, \code{rules.asm} & \code{a3\_russian\_draughts} \\
+A4 & Tự đề xuất: luật ăn nhiều quân nhất, máy chơi cùng & \code{movegen.asm}, \code{ai.asm} & \code{a4\_longest\_capture}, \code{a4\_computer\_opponent} \\
+\end{longtable}
+
+\section{Cấu trúc báo cáo}
+
+Chương~2 trình bày thiết kế dữ liệu và cách chia module. Chương~3 mô tả phần bắt buộc. Chương~4 và chương~5 lần lượt trình bày các tiện ích và các luật nâng cao; với mỗi phần mở rộng, báo cáo nêu lý do chọn và cách hiện thực. Chương~6 nói về kiểm thử, chương~7 tổng kết. Phụ lục có hướng dẫn sử dụng và danh sách test.
+
+Mã nguồn, test và báo cáo được quản lý tại:
+
+{\small\url{\repourl}}

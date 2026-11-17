@@ -1,0 +1,30 @@
+% Kieu trinh bay ma hop ngu va ket qua man hinh.
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Đoạn mã}
+\renewcommand{\lstlistlistingname}{Danh mục đoạn mã}
+
+\lstdefinelanguage{mips}{
+  morecomment=[l]{\#},
+  morestring=[b]",
+  sensitive=true
+}
+\lstdefinestyle{asm}{
+  language=mips,
+  basicstyle=\ttfamily\footnotesize,
+  commentstyle=\color{black!55},
+  stringstyle=\color{black!70},
+  numbers=left, numberstyle=\tiny\color{black!50}, numbersep=6pt,
+  frame=single, rulecolor=\color{black!30},
+  xleftmargin=1.6em, framexleftmargin=1.4em,
+  breaklines=true, tabsize=4, showstringspaces=false,
+  captionpos=b
+}
+\lstdefinestyle{screen}{
+  basicstyle=\ttfamily\footnotesize,
+  frame=single, rulecolor=\color{black!30},
+  backgroundcolor=\color{black!4},
+  breaklines=true, showstringspaces=false, columns=fullflexible,
+  keepspaces=true, captionpos=b
+}
+\newcommand{\asmfile}[3][]{%
+  \lstinputlisting[style=asm,caption={#2},#1]{listings/#3}}

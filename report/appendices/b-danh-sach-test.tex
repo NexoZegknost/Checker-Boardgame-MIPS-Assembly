@@ -1,0 +1,32 @@
+\chapter{Danh sách test}\label{app:tests}
+
+\begin{longtable}{@{}p{5.2cm}p{9.8cm}@{}}
+\toprule
+Test & Nội dung \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\code{m1\_initial\_board} & In bàn cờ ban đầu \\
+\code{m2\_handout\_moves} & \code{21-17} hợp lệ, \code{21-13} bị từ chối, như trong đề \\
+\code{m2\_bad\_input} & Gõ chữ, dòng trống, số ngoài bàn \\
+\code{m3\_chain\_capture} & Ăn chuỗi hai quân từ thế ban đầu, gõ sai giữa chuỗi \\
+\code{m3\_promotion} & Phong vua trong một ván chơi từ đầu \\
+\code{m3\_handout\_chain} & Thế cờ mục 2.2 của đề: \code{9x18} rồi ăn tiếp; kèm đi lại và chơi lại \\
+\code{m3\_handout\_figure8} & Hình 8 của đề: \code{15x24 24x31 31x22 22x13}, phong vua giữa chuỗi \\
+\code{m4\_full\_game} & Một ván trọn vẹn tới khi Đen hết quân \\
+\code{q1\_framed\_board} & Bàn cờ có khung \\
+\code{q2\_q3\_point\_of\_view} & Xoay bàn; xoay cả số ô \\
+\code{q4\_pick\_from\_list} & Chọn nước từ danh sách, kể cả khi ăn chuỗi \\
+\code{q5\_error\_messages} & Từng loại thông báo lỗi \\
+\code{q6\_blocked} & Thua do bị chặn hết nước \\
+\code{q7\_draw\_offer} & Cầu hòa: được nhận, và hết hiệu lực \\
+\code{q8\_menu\_restart} & Menu, chơi lại, về menu rồi chơi ván mới \\
+\code{q9\_log\_undo\_help} & Biên bản, đi lại, trợ giúp \\
+\code{q9\_forty\_move\_draw} & Hòa sau 40 nước không tiến triển \\
+\code{a1\_mandatory\_capture} & Bắt buộc ăn và các thông báo liên quan \\
+\code{a2\_board\_10x10} & Bàn 10$\times$10 với 20 và 15 quân \\
+\code{a3\_russian\_draughts} & Ăn lùi, vua bay, luật chọn ô đáp, phong vua giữa chuỗi \\
+\code{a4\_longest\_capture} & Luật ăn nhiều quân nhất, quân đã bị ăn hiện là \code{x} \\
+\code{a4\_computer\_opponent} & Đấu với máy: đi lại, cầu hòa bị từ chối và được nhận \\
+\end{longtable}

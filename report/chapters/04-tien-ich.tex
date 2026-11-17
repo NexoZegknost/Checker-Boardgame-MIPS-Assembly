@@ -1,0 +1,100 @@
+\chapter{Mở rộng: tiện ích cho người chơi}
+
+Mỗi mục dưới đây nêu lý do chọn tính năng và cách hiện thực. Tất cả đều tắt ở chế độ mặc định hoặc không làm thay đổi định dạng nhập xuất của đề.
+
+\section{Bàn cờ có khung và số ô (Q1)}
+
+\textbf{Lý do.} Ở kiểu hiển thị của đề, người chơi phải tự đếm để biết quân mình đứng ở ô số mấy; đây là chỗ dễ gõ sai nhất.
+
+\textbf{Cách làm.} \code{display\_framed} in mỗi ô tối kèm số ô và quân đứng trên đó, thêm khung và dòng đếm quân ở dưới. Số ô lấy qua \code{sq\_of\_cell} nên luôn khớp với cách đánh số đang dùng.
+
+\begin{lstlisting}[style=screen,caption={Ba hàng đầu của bàn cờ có khung}]
+  +----+----+----+----+----+----+----+----+
+  |    | 1 r|    | 2 r|    | 3 r|    | 4 r|
+  +----+----+----+----+----+----+----+----+
+  | 5 r|    | 6 r|    | 7 r|    | 8 r|    |
+  +----+----+----+----+----+----+----+----+
+  |    | 9 r|    |10 r|    |11 r|    |12 .|
+\end{lstlisting}
+
+\section{Xoay bàn và số ô theo người đang đi (Q2, Q3)}\label{sec:xoay}
+
+\textbf{Lý do.} Khi hai người ngồi đối diện dùng chung một màn hình, bên Đỏ phải nhìn bàn cờ ngược. Xoay bàn giúp ai cũng thấy quân mình đi lên.
+
+\textbf{Cách làm.} Đầu mỗi lượt, \code{set\_perspective} đặt hai cờ \code{view\_flip} và \code{num\_flip} theo tùy chọn và theo bên đang đi. Hai hàm in bàn cờ hỏi ô nào nằm ở vị trí (hàng, cột) trên màn hình qua \code{screen\_cell}; khi \code{view\_flip} bật, hàm này đổi cả hai tọa độ thành $n-1-x$. Với số ô, xoay bàn 180° biến ô $k$ thành ô $N+1-k$ ($N$ là tổng số ô tối), nên \code{cell\_of\_sq} và \code{sq\_of\_cell} chỉ thêm một phép trừ (đoạn mã~\ref{lst:cellofsq}). Khi đó ô góc dưới bên trái của Đỏ cũng là ô~29, đúng như hình~11 của đề.
+
+\asmfile[label=lst:cellofsq]{Đổi số ô người chơi gõ thành chỉ số mảng}{cell_of_sq.asm}
+
+\section{Chọn nước đi từ danh sách (Q4)}
+
+\textbf{Lý do.} Người mới chơi thường không biết quân nào đi được và đi được tới đâu, nhất là khi bật luật bắt buộc ăn.
+
+\textbf{Cách làm.} Vì \code{legal\_buf} đã chứa mọi bước hợp lệ, kiểu nhập này chỉ là lọc và in. \code{list\_movable} in số ô của những quân có nước đi; sau khi người chơi chọn quân, \code{list\_moves} in các nước của quân đó có đánh số; \code{nth\_move} trả về nước thứ $k$. Trong một chuỗi ăn, danh sách của quân đang ăn được in ngay và không có lựa chọn quay lại.
+
+\begin{lstlisting}[style=screen,caption={Nhập nước đi bằng cách chọn từ danh sách}]
+Black's turn.
+Pieces that can move: 21 22 23 24
+Choose a piece: 22
+Moves for 22:
+ 1) 22-17
+ 2) 22-18
+ 0) choose another piece
+Your choice:
+\end{lstlisting}
+
+\section{Thông báo lỗi chi tiết (Q5)}
+
+\textbf{Lý do.} Câu \code{Not a valid move!} không cho người chơi biết mình sai ở đâu.
+
+\textbf{Cách làm.} Ô xuất phát được kiểm tra ngay khi gõ: không phải số, ngoài bàn, ô trống, quân của đối phương, hoặc quân không có nước đi. Nếu ô đáp sai, \code{explain\_landing} tính khoảng cách hàng và cột giữa hai ô rồi xét lần lượt: ô đáp đã có quân, không nằm trên đường chéo, quân thường đi lùi, quá xa, không có gì để nhảy qua, nhảy qua quân mình, hoặc đang ăn chuỗi mà đi nước khác. Thông báo vẫn mở đầu bằng \code{Not a valid move!} và kết thúc bằng \code{Try again.} như trong đề.
+
+\begin{lstlisting}[style=screen,caption={Một số thông báo lỗi}]
+Not a valid move! Square 13 is not on a diagonal from square 21. Try again.
+Not a valid move! The piece on square 9 belongs to Red. Try again.
+Not a valid move! A man can only move forward. Try again.
+Not a valid move! You must keep capturing with the piece on square 15. Try again.
+\end{lstlisting}
+
+\section{Thua khi bị chặn hết nước (Q6)}
+
+Đã trình bày ở chương~3: phép kiểm tra ``\code{gen\_legal} trả về 0'' bao gồm cả trường hợp còn quân nhưng không quân nào đi được.
+
+\section{Cầu hòa (Q7)}
+
+\textbf{Lý do.} Nhiều tàn cuộc không bên nào thắng được; đề cũng gợi ý tính năng này.
+
+\textbf{Cách làm.} Biến \code{draw\_offer} giữ một bit cho mỗi màu. Lệnh \code{d} bật bit của bên đang đi; nếu bit của bên kia đã bật thì ván hòa. Khi một lượt kết thúc, chương trình chỉ giữ lại bit của bên vừa đi, tức là lời cầu hòa mà đối thủ không nhận trước khi đi sẽ tự hết hiệu lực.
+
+\section{Chơi lại không cần thoát (Q8)}
+
+Chương trình có menu chính; ván kết thúc hoặc lệnh \code{q} đưa về menu. Lệnh \code{r} trong ván nạp lại bản lưu thế cờ lúc bắt đầu ván (mục~\ref{sec:state}), nên chơi lại đúng cả thế cờ tự xếp.
+
+\section{Các tiện ích tự đề xuất (Q9)}
+
+\subsection{Biên bản ván đấu}
+
+\textbf{Lý do.} Đề giới thiệu ký hiệu ghi nước đi nhưng không yêu cầu dùng; có biên bản thì xem lại và kiểm tra ván đấu dễ hơn nhiều.
+
+\textbf{Cách làm.} Sau mỗi bước, \code{log\_add} ghi một word gồm số ô đi, số ô đến, cờ ăn quân và màu quân. Lệnh \code{l} in mỗi lượt một dòng; các bước của một chuỗi ăn nằm chung dòng, giống cách ghi \code{15x24 24x31} trong đề.
+
+\subsection{Đi lại}
+
+\textbf{Lý do.} Gõ nhầm một ô là hỏng cả ván, mà chương trình không có cách nào khác để sửa.
+
+\textbf{Cách làm.} Đầu mỗi lượt, \code{undo\_mark} cất một bản thế cờ vào \code{undo\_stack} (200 bản; khi đầy thì bỏ bản cũ nhất). Lệnh \code{u} nạp lại bản của lượt trước; nếu đang giữa chuỗi ăn thì chỉ quay về đầu lượt hiện tại; nếu chơi với máy thì lùi luôn cả nước của máy. Độ dài biên bản nằm trong thế cờ nên biên bản tự ngắn lại theo.
+
+\subsection{Hòa sau 40 nước}
+
+\textbf{Lý do.} Hai vua đuổi nhau có thể kéo dài vô hạn.
+
+\textbf{Cách làm.} \code{apply\_step} tăng \code{quiet\_plies} khi một vua đi mà không ăn, và đặt về 0 khi có ăn quân hoặc quân thường di chuyển. Bộ đếm đạt 80 (40 nước mỗi bên) thì ván hòa.
+
+\subsection{Xếp thế cờ}
+
+\textbf{Lý do.} Muốn thử một tình huống như phong vua giữa chuỗi ăn thì phải chơi hàng chục nước mới tới. Trình xếp thế cờ cho phép đặt quân trực tiếp rồi chơi tiếp, vừa tiện luyện tàn cuộc, vừa giúp viết test và trình bày từng luật.
+
+\textbf{Cách làm.} \code{editor\_run} nhận các lệnh dạng \code{b 14}, \code{R 9}, \code{x 14}; mỗi lệnh ghi một byte vào mảng bàn cờ. Khi bắt đầu chơi, số quân được đếm lại rồi gọi \code{game\_run} như một ván bình thường.
+
+\subsection{Trợ giúp}
+
+Lệnh \code{h} trong ván in danh sách lệnh; mục \emph{How to play} ở menu chính tóm tắt luật chơi.

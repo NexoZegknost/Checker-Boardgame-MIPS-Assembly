@@ -1,0 +1,86 @@
+\chapter{Thiết kế}
+
+\section{Tổ chức mã nguồn}
+
+Chương trình gồm 13 file hợp ngữ trong thư mục \code{src/}, tổng cộng khoảng 2\,900 dòng, được MARS dịch chung nhờ tùy chọn \emph{Assemble all files in directory}. Mỗi file đảm nhận một việc và chỉ công khai (\code{.globl}) những nhãn mà file khác cần. Hằng số và vài macro ngắn (in chuỗi, \code{push}, \code{pop}) đặt trong \code{include/constants.inc} và được \code{.include} ở đầu mỗi file.
+
+\begin{figure}[ht]
+\centering
+\input{figures/modules}
+\caption{Quan hệ gọi giữa các file mã nguồn}\label{fig:modules}
+\end{figure}
+
+\begin{table}[ht]
+\centering\small
+\caption{Nhiệm vụ của từng file}\label{tab:modules}
+\begin{tabularx}{\textwidth}{@{}lL@{}}
+\toprule
+File & Nhiệm vụ \\
+\midrule
+\code{main.asm} & Điểm vào chương trình, menu chính, trang luật chơi \\
+\code{game.asm} & Vòng lặp một ván: hỏi nước đi, xử lý lệnh, kết thúc ván \\
+\code{board.asm} & Mảng bàn cờ, bảng tra số ô, lưu và nạp thế cờ \\
+\code{movegen.asm} & Sinh nước đi của một quân và danh sách nước hợp lệ của một bên \\
+\code{rules.asm} & Thực hiện một bước: di chuyển, ăn, phong vua, chuyển lượt \\
+\code{explain.asm} & Tìm lý do một nước đi bị từ chối và in ra \\
+\code{display.asm} & In bàn cờ kiểu đề bài và kiểu có khung \\
+\code{input.asm} & Đọc một dòng và phân tích thành số hoặc lệnh \\
+\code{picker.asm} & Kiểu nhập chọn từ danh sách \\
+\code{history.asm} & Biên bản ván đấu, đi lại \\
+\code{settings.asm} & Tùy chọn hiển thị, kiểu nhập, bộ luật \\
+\code{editor.asm} & Xếp thế cờ tùy ý \\
+\code{ai.asm} & Máy chơi quân Đỏ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Các hàm tuân theo quy ước gọi của MIPS: tham số trong \code{\$a0}--\code{\$a3}, kết quả trong \code{\$v0}, \code{\$v1}. Hàm nào gọi hàm khác thì cất \code{\$ra} và các thanh ghi \code{\$s} nó dùng lên stack ở đầu hàm và lấy lại trước \code{jr \$ra}.
+
+\section{Biểu diễn bàn cờ}
+
+Bàn $n\times n$ được đặt trong một mảng byte $(n+2)\times(n+2)$, vòng ô ngoài cùng mang giá trị \code{WALL} (hình~\ref{fig:mailbox}). Với $w=n+2$, ô ở hàng $r$, cột $c$ có chỉ số
+\[
+  \mathit{idx} = (r+1)\cdot w + (c+1).
+\]
+
+\begin{figure}[ht]
+\centering
+\input{figures/mailbox}
+\caption{Bàn 8$\times$8 trong mảng 10$\times$10 có viền}\label{fig:mailbox}
+\end{figure}
+
+Cách này có hai lợi ích. Thứ nhất, đi theo một hướng chéo chỉ là cộng một hằng số vào chỉ số ($\pm(w+1)$, $\pm(w-1)$), và đi ra ngoài bàn tự động rơi vào một ô \code{WALL} khác~0, nên mã sinh nước đi không phải kiểm tra hàng và cột. Thứ hai, $n$ và $w$ là biến chứ không phải hằng số, nên cùng một đoạn mã chạy được cho bàn 8$\times$8 lẫn 10$\times$10; mảng được cấp sẵn 144 byte cho trường hợp lớn nhất.
+
+Mỗi ô là một byte ghép từ các bit trong bảng~\ref{tab:cell}. Nhờ mã hóa theo bit, các phép thử thường gặp chỉ cần một lệnh \code{and}: quân của bên $p$ là \code{ô \& p}, quân đối phương là \code{ô \& (p \^{} 3)}.
+
+\begin{table}[ht]
+\centering\small
+\caption{Các bit của một ô}\label{tab:cell}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Giá trị & Tên & Ý nghĩa \\
+\midrule
+\code{0x01} & \code{BLACK} & quân Đen \\
+\code{0x02} & \code{RED} & quân Đỏ \\
+\code{0x04} & \code{KING} & là vua \\
+\code{0x08} & \code{WALL} & ô viền \\
+\code{0x10} & \code{GHOST} & đã bị ăn trong lượt này, chưa nhấc khỏi bàn (mục~\ref{sec:ghost}) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Số ô}
+
+Người chơi dùng ký hiệu chuẩn: các ô tối được đánh số từ 1, theo từng hàng từ trên xuống. Hàm \code{board\_clear} duyệt bàn một lần và dựng hai bảng tra \code{sq\_to\_idx} (số ô sang chỉ số mảng) và \code{idx\_to\_sq} (ngược lại, 0 nếu là ô sáng). Mọi chỗ đọc số do người chơi gõ đều đi qua \code{cell\_of\_sq}, mọi chỗ in số ô đều đi qua \code{sq\_of\_cell}, nên việc đổi cách đánh số (mục~\ref{sec:xoay}) chỉ cần sửa hai hàm này.
+
+\section{Nước đi}
+
+Một bước đi được gói trong một word: byte thấp nhất là ô xuất phát, byte kế là ô đáp, byte thứ ba là ô bị nhảy qua (0 nếu là nước đi thường). Một lượt ăn chuỗi là nhiều bước nối tiếp. Cách gói này cho phép cất cả danh sách nước đi trong một mảng word và so khớp ``từ ô $a$ tới ô $b$'' bằng một phép so sánh 16 bit thấp.
+
+\section{Thế cờ}\label{sec:state}
+
+Mọi dữ liệu thay đổi trong một ván được khai báo liền nhau giữa hai nhãn \code{state} và \code{state\_end}: mảng bàn cờ, lượt đi, quân đang ăn chuỗi, số quân mỗi bên, bộ đếm hòa, độ dài biên bản và lời cầu hòa, tổng cộng 43 word. Hai hàm \code{state\_save} và \code{state\_load} chép nguyên khối này (đoạn mã~\ref{lst:state}).
+
+\asmfile[label=lst:state]{Lưu một thế cờ}{state_save.asm}
+
+Quyết định này làm cho ba tính năng về sau gần như không tốn thêm mã: đi lại, chơi lại từ đầu, và việc ``đi thử rồi trả lại'' mà luật ăn nhiều quân nhất và máy đều cần.
