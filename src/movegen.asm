@@ -203,8 +203,8 @@ gl_done:
         addi    $sp, $sp, 16
         jr      $ra
 
-# Some rule sets do not allow every jump. Looks at the a0 jumps at the start
-# of legal_buf and keeps the allowed ones. v0 = how many are left.
+# Keeps the jumps the rules allow among the first a0 entries of legal_buf.
+# v0 = how many are left.
 filter_jumps:
         addi    $sp, $sp, -20
         sw      $ra, 16($sp)
@@ -223,8 +223,7 @@ fj_keep_all:
         move    $v0, $s0
         j       fj_ret
 
-        # longest capture rule: score each jump with the length of the best
-        # chain it can start and keep the ones with the top score
+        # longest capture rule: keep the jumps that start the longest chain
 fj_longest:
         li      $s1, 0
         li      $s3, 0
@@ -256,9 +255,7 @@ fj_pack_next:
         move    $v0, $s2
         j       fj_ret
 
-        # flying kings without the longest rule (Russian draughts): if the
-        # king can go on jumping from some of the squares behind the piece it
-        # takes, it has to land on one of those
+        # Russian rule: a king must land where it can keep jumping, if it can
 fj_landing:
         li      $s1, 0
 fj_cont:
@@ -270,8 +267,7 @@ fj_cont:
         addi    $s1, $s1, 1
         blt     $s1, $s0, fj_cont
 
-        # mark with 2 what stays: jumps that continue, and jumps that have
-        # no continuing alternative over the same piece
+        # bit 1 = keep: it continues, or no other landing square does
         li      $s1, 0
 fj_mark:
         sll     $t0, $s1, 2
@@ -323,9 +319,7 @@ fj_ret:
         addi    $sp, $sp, 20
         jr      $ra
 
-# a0 = a jump. v0 = number of pieces taken by the longest chain that starts
-# with it. Plays the jump on the real board, tries every follow-up the same
-# way and then puts the position back.
+# a0 = a jump. v0 = pieces taken by the longest chain starting with it.
 chain_len:
         addi    $sp, $sp, -176          # 4 saved registers + room for 40 follow-ups
         sw      $ra, 172($sp)

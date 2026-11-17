@@ -42,7 +42,7 @@ dp_col:
         jal     screen_cell
         bnez    $v1, dp_dark
 
-        # light square: skip it at the end of a row so there is no trailing blank
+        # no trailing blank at the end of a row
         addi    $t3, $s2, -1
         beq     $s1, $t3, dp_next
         li      $t4, ' '
@@ -73,9 +73,7 @@ dp_next:
         addi    $sp, $sp, 16
         jr      $ra
 
-# Board with a frame. Every dark square shows its number next to what
-# stands on it, so the player can read off what to type.
-#   | 9 r|    |10 .|
+# Board with a frame, dark squares show their number:  | 9 r|    |10 .|
 display_framed:
         addi    $sp, $sp, -20
         sw      $ra, 16($sp)
@@ -155,9 +153,7 @@ fl_loop:
         print_chr('\n')
         jr      $ra
 
-# a0 = row, a1 = column as drawn on screen (0,0 is the top left corner).
-# v0 = the cell shown there, v1 = 0 if it is a light square.
-# When the board is turned towards Red both coordinates are mirrored.
+# a0 = row, a1 = column on screen. v0 = cell shown there, v1 = 0 if light.
 screen_cell:
         lw      $t0, view_flip
         beqz    $t0, sc_index

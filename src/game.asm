@@ -71,7 +71,7 @@ g_turn:
         jal     gen_legal
         bnez    $v0, g_check_draw
 
-        # nothing to play: either everything was captured or the rest is stuck
+        # no legal move: the side to move has lost
         lw      $s0, turn
         move    $a0, $s0
         jal     print_side
@@ -131,8 +131,7 @@ g_input:
         j       g_play
 
 g_human:
-        # four ways to ask, depending on the entry mode and on whether a
-        # chain of jumps is open
+        # depends on the entry mode and on whether a chain is open
         lw      $t0, chain_piece
         lw      $t1, opt_input
         bnez    $t1, g_input_list
@@ -194,8 +193,7 @@ g_played:
 g_next:
         andi    $t0, $s1, STEP_CHAIN
         bnez    $t0, g_chain
-        # turn over: an offer the mover did not accept is off the table,
-        # an offer the mover made stays for the opponent to answer
+        # turn over: only the mover's own draw offer stays on the table
         lw      $t0, draw_offer
         and     $t0, $t0, $s0
         sw      $t0, draw_offer
@@ -243,8 +241,7 @@ g_log:
         jal     log_print
         j       g_input
 g_undo:
-        # in the middle of a chain only the chain is taken back; against the
-        # computer its reply has to go as well
+        # 1 = just the open chain, 2 = last move, 3 = also the computer's reply
         li      $a0, 1
         lw      $t0, chain_piece
         bnez    $t0, g_undo_go

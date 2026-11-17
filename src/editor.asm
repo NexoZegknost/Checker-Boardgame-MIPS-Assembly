@@ -1,6 +1,4 @@
 # Position editor: put pieces on an empty board and play from there.
-# Handy for practising endgames and for showing a rule without having to
-# play twenty moves first.
 
 .include "include/constants.inc"
 

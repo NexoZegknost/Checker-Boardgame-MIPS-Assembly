@@ -118,8 +118,7 @@ custom_rows:    .word lbl_board, rule_board, 3, board_names
                 .word lbl_remove,    rule_remove,    2, remove_names
 custom_end:
 
-# what run_menu needs: title, rows, end of rows, text under the rows,
-# highest number that may be typed
+# for run_menu: title, rows, end of rows, footer, highest valid choice
 settings_desc:  .word msg_settings, options, options_end, msg_settings_f, CUSTOM_ROW
 custom_desc:    .word msg_custom, custom_rows, custom_end, msg_custom_f, 8
 
@@ -139,7 +138,7 @@ sm_custom:
         la      $a0, custom_desc
         jal     run_menu
         beqz    $v0, sm_again
-        # the player changed a single rule, so it is no longer one of the presets
+        # no longer one of the presets
         li      $t0, CUSTOM_SET
         sw      $t0, opt_rules
         jal     rules_commit
@@ -148,8 +147,7 @@ sm_leave:
         pop     ($ra)
         jr      $ra
 
-# Shows the menu described at a0 and reads a choice until it is usable.
-# Picking an option line moves that option on to its next value.
+# Shows the menu at a0. Picking an option line steps it to its next value.
 # v0 = the number picked (0 = back).
 run_menu:
         addi    $sp, $sp, -16
@@ -240,8 +238,7 @@ lp_done:
         pop     ($ra)
         jr      $ra
 
-# Turns the single rules into what the engine reads:
-# rule_flags, board_n and men_rows.
+# single rules -> rule_flags, board_n, men_rows
 rules_commit:
         li      $t0, 8
         li      $t1, 3

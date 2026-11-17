@@ -1,10 +1,6 @@
 # Move log and take-back.
-#
-# The log keeps one word per step with the standard square numbers:
-#   from | to << 8 | capture << 16 | colour << 24
-# Take-back works on whole positions: the game stores one at the start of
-# every turn and undo simply reloads an older one. log_len is part of the
-# position, so the log shrinks back by itself.
+# Log entry: from | to << 8 | capture << 16 | colour << 24 (standard numbers).
+# Undo reloads a position saved at the start of an earlier turn.
 
 .include "include/constants.inc"
 
@@ -140,7 +136,7 @@ undo_mark:
         lw      $t0, undo_count
         blt     $t0, UNDO_MAX, um_store
 
-        # full: drop the oldest position by sliding everything down one slot
+        # full: drop the oldest one
         la      $t1, undo_stack
         addi    $t2, $t1, STATE_BYTES
         li      $t3, UNDO_MAX
@@ -165,10 +161,8 @@ um_store:
         pop     ($ra)
         jr      $ra
 
-# Goes back a0 marks; the newest mark is the start of the current turn, so
-# 1 cancels a half-played chain and 2 gives the previous player the move again.
-# The reloaded mark is taken off the stack too because the turn loop marks it again.
-# v0 = 0 if there are not that many positions stored.
+# Goes back a0 marks (1 = start of this turn, 2 = the turn before).
+# v0 = 0 if there are not that many.
 undo_back:
         push    ($ra)
         li      $v0, 0

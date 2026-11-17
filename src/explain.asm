@@ -39,9 +39,8 @@ own_jumps:      .space 160
 
 .text
 
-# a0 = what the player typed as starting square, a1 = its parse_line kind.
-# v0 = the cell if a move can start there. Otherwise the reason is printed
-# and v0 = 0. Needs an up to date legal_buf.
+# a0 = starting square as typed, a1 = its parse_line kind.
+# v0 = the cell, or 0 after printing why a move cannot start there.
 explain_start:
         addi    $sp, $sp, -12
         sw      $ra, 8($sp)
@@ -138,9 +137,8 @@ es_ret:
         addi    $sp, $sp, 12
         jr      $ra
 
-# Called when the move from cell a0 to the square the player typed (a1, with
-# parse kind a2) is not in the legal list. Works out what is wrong with it
-# from the geometry and prints that.
+# a0 = from cell, a1 = landing square as typed, a2 = its parse kind.
+# The move is not legal; prints what is wrong with it.
 explain_landing:
         addi    $sp, $sp, -24
         sw      $ra, 20($sp)
@@ -343,8 +341,7 @@ say_no_square:
         print_str(str_dot)
         jr      $ra
 
-# v0 = 1 if the legal list holds nothing but jumps because capturing is
-# mandatory. Jumps are generated first, so looking at the first entry is enough.
+# v0 = 1 if only jumps are legal right now (jumps come first in legal_buf)
 capture_forced:
         li      $v0, 0
         lw      $t0, rule_flags

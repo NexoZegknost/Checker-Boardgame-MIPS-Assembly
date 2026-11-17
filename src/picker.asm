@@ -39,8 +39,7 @@ pm_sep:
         addi    $sp, $sp, 8
         jr      $ra
 
-# One line with the squares of all pieces that have a legal move,
-# in the numbering the player currently sees.
+# One line with the squares of all pieces that have a legal move.
 list_movable:
         addi    $sp, $sp, -8
         sw      $ra, 4($sp)

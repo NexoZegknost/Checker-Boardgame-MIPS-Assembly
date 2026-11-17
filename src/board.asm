@@ -1,7 +1,5 @@
 # Board storage and square numbering.
-#
-# The n x n board sits inside a (n+2) x (n+2) byte array whose outer ring is
-# WALL, so stepping off the board never needs a row/column check.
+# The board has a one-cell WALL border, so moves never need a range check.
 # cell index = (row + 1) * w + (col + 1), row 0 is Red's back rank.
 
 .include "include/constants.inc"
@@ -14,8 +12,7 @@
 .globl state_save, state_load, snap_push, snap_pop
 
 .data
-# A position is everything from here to state_end. state_save and state_load
-# copy the block as a whole, so keep STATE_WORDS in step when adding to it.
+# everything up to state_end is one position (see STATE_WORDS)
                 .align 2
 state:
 board:          .space MAX_CELLS
@@ -40,7 +37,7 @@ dirs:           .word -11, -9, 9, 11
 sq_to_idx:      .space 52
 idx_to_sq:      .space MAX_CELLS
 
-# positions parked while the move generator or the computer tries moves out
+# positions parked while a move is tried out
                 .align 2
 snap_top:       .word snap_stack
 snap_stack:     .space 16512            # 96 * STATE_BYTES
@@ -175,8 +172,7 @@ cs_lookup:
 cs_done:
         jr      $ra
 
-# a0 = cell index, v0 = its square number as the player sees it
-# (0 for a light square)
+# a0 = cell index, v0 = square number as the player sees it (0 = light square)
 sq_of_cell:
         la      $t0, idx_to_sq
         add     $t0, $t0, $a0
@@ -233,8 +229,7 @@ sl_loop:
         bgtz    $t1, sl_loop
         jr      $ra
 
-# snap_push parks the current position on a stack, snap_pop takes the last
-# one back. Used to try a move and undo it again.
+# try a move and take it back: snap_push before, snap_pop after
 snap_push:
         lw      $a0, snap_top
         addi    $t0, $a0, STATE_BYTES

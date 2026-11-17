@@ -97,7 +97,7 @@ pl_ret:
         pop     ($ra)
         jr      $ra
 
-# The helpers below walk the line through $t0 and leave $t8/$t9 alone.
+# helpers: $t0 walks the line, $t8/$t9 are left alone
 
 skip_blanks:
         lbu     $t1, 0($t0)

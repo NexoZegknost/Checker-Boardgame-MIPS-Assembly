@@ -1,9 +1,5 @@
-# Computer opponent.
-#
-# Easy picks any legal step at random. Medium and hard look ahead with a
-# plain negamax search and alpha-beta cut-offs; the only difference between
-# them is the depth. Moves are tried on the real board and taken back with
-# snap_push / snap_pop, so the search understands every rule set for free.
+# Computer opponent: random on easy, negamax with alpha-beta otherwise.
+# Moves are tried on the real board and undone with snap_push / snap_pop.
 
 .include "include/constants.inc"
 
@@ -49,8 +45,7 @@ ac_done:
         pop     ($ra)
         jr      $ra
 
-# The human (always Black) has offered a draw.
-# v0 = 1 if the computer takes it, which it does when it stands worse.
+# v0 = 1 if the computer takes a draw offer (only when it stands worse)
 ai_accepts_draw:
         push    ($ra)
         jal     evaluate                # from the point of view of the side to move
@@ -62,10 +57,9 @@ ad_black:
         pop     ($ra)
         jr      $ra
 
-# Negamax. a0 = turns left to look ahead, a1 = alpha, a2 = beta.
-# v0 = value of the position for the side to move; the move that gets it is
-# left in ai_best. A chain of jumps counts as one turn: while the same side
-# keeps moving the depth and the window stay as they are.
+# a0 = turns left to look ahead, a1 = alpha, a2 = beta.
+# v0 = value for the side to move, best move goes to ai_best.
+# A chain of jumps counts as one turn.
 search:
         addi    $sp, $sp, -40
         sw      $ra, 36($sp)
@@ -86,7 +80,7 @@ search:
         jal     gen_legal
         move    $s3, $v0
         bnez    $s3, se_alive
-        # no move at all: lost, and losing later is a little less bad
+        # no move: lost, later is less bad
         li      $v0, -LOST
         sub     $v0, $v0, $s0
         j       se_ret
@@ -162,8 +156,7 @@ se_ret:
         addi    $sp, $sp, 40
         jr      $ra
 
-# v0 = material balance seen from the side to move. Men count a bit more
-# the closer they are to being crowned.
+# v0 = material balance for the side to move, advanced men count a bit more
 evaluate:
         lw      $t9, turn
         li      $t8, KING_VALUE

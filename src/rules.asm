@@ -11,11 +11,8 @@ scratch_moves:  .space 160
 
 .text
 
-# a0 = packed move (see movegen.asm).
-# Plays one step: a plain move or a single jump. After a jump the same piece
-# has to go on if it can, in that case the turn does not change and
-# chain_piece says which piece is stuck jumping.
-# v0 = STEP_* bits describing what happened.
+# a0 = packed move. Plays one step. If the piece can jump again the turn
+# stays and chain_piece is set. v0 = STEP_* bits.
 apply_step:
         addi    $sp, $sp, -20
         sw      $ra, 16($sp)
@@ -141,8 +138,7 @@ as_ret:
         addi    $sp, $sp, 20
         jr      $ra
 
-# a0 = cell, a1 = piece. v0 = 1 if the piece is a man standing on the row
-# where it gets crowned: the top row for Black, the bottom row for Red.
+# a0 = cell, a1 = piece. v0 = 1 if it is a man on its crowning row.
 # Only touches $t5, $t6 and $v0.
 reaches_crown_row:
         li      $v0, 0
